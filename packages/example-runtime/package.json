@@ -1,0 +1,33 @@
+{
+	"name": "@xyng/example-runtime",
+	"version": "1.0.0",
+	"main": "dist/main.cjs.js",
+	"module": "dist/main.esm.js",
+	"typings": "dist/main.d.ts",
+	"typescript": {
+		"definition": "dist/main.d.ts"
+	},
+	"scripts": {
+		"start": "node src/main.js"
+	},
+	"dependencies": {
+		"@rollup/plugin-html": "^0.1.1",
+		"@xyng/backend-adapter-argonauts": "1.0.0",
+		"@xyng/backend-adapter-studip": "1.0.0",
+		"@xyng/request-adapter-axios": "1.0.0",
+		"rollup-plugin-livereload": "^1.0.4",
+		"rollup-plugin-node-builtins": "^2.1.2",
+		"rollup-plugin-serve": "^1.0.1"
+	},
+	"devDependencies": {
+		"@rollup/plugin-commonjs": "^11.0.1",
+		"@rollup/plugin-node-resolve": "^7.0.0",
+		"rollup": "^1.29.0",
+		"rollup-plugin-typescript2": "^0.25.3",
+		"ts-node": "^8.6.2",
+		"typescript": "^3.7.4"
+	},
+	"workspaces": [
+		"packages/*"
+	]
+}

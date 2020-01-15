@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"module": "es6",
+		"target": "es6",
+		"moduleResolution": "node",
+		"sourceMap": true,
+		"lib": [
+			"esnext",
+			"dom"
+		],
+		"baseUrl": "./packages",
+		"paths": {
+			"@xyng/backend-adapter": ["backend-adapter/src"],
+			"@xyng/request-adapter-axios": ["request-adapter-axios/src"],
+			"@xyng/*": ["*/src"]
+		}
+	},
+
+	"exclude": [
+		"node_modules",
+		"dist"
+	]
+}
