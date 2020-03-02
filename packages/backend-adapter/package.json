@@ -1,0 +1,30 @@
+{
+	"name": "@xyng/backend-adapter",
+	"version": "1.0.0",
+	"description": "",
+	"main": "dist/main.cjs.js",
+	"module": "dist/main.esm.js",
+	"typings": "dist/main.d.ts",
+	"typescript": {
+		"definition": "dist/main.d.ts"
+	},
+	"scripts": {
+		"build": "rollup -c",
+		"dev": "rollup -c -w",
+		"prepare": "npm run build"
+	},
+	"author": "Daniel Melchior",
+	"license": "ISC",
+	"dependencies": {
+		"oauth-1.0a": "^2.2.6",
+		"qs": "^6.9.1"
+	},
+	"devDependencies": {
+		"@rollup/plugin-commonjs": "^11.0.1",
+		"@rollup/plugin-node-resolve": "^7.0.0",
+		"rollup": "^1.29.0",
+		"rollup-plugin-typescript2": "^0.25.3",
+		"tslib": "^1.10.0",
+		"typescript": "^3.7.2"
+	}
+}
