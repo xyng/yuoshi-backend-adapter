@@ -1,8 +1,8 @@
-const RequestAdapterAxios = require("@xyng/request-adapter-axios")
+const RequestAdapterAxios = require("@xyng/yuoshi-request-adapter-axios")
 
-const { BackendAdapter, StudipOauthAuthenticationHandler } = require("@xyng/backend-adapter-argonauts")
+const { BackendAdapter, StudipOauthAuthenticationHandler } = require("@xyng/yuoshi-backend-adapter-argonauts")
 
-const { RequestError } = require("@xyng/backend-adapter")
+const { RequestError } = require("@xyng/yuoshi-backend-adapter")
 
 const readline = require("readline")
 

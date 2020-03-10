@@ -1,7 +1,11 @@
 {
-	"name": "@xyng/backend-adapter",
-	"version": "1.0.0",
+	"name": "@xyng/yuoshi-backend-adapter",
+	"version": "0.0.1",
 	"description": "",
+	"repository" : {
+		"type" : "git",
+		"url": "git+https://github.com/xyng/yuoshi-backend-adapter.git"
+	},
 	"main": "dist/main.cjs.js",
 	"module": "dist/main.esm.js",
 	"typings": "dist/main.d.ts",
@@ -14,7 +18,7 @@
 		"prepare": "npm run build"
 	},
 	"author": "Daniel Melchior",
-	"license": "ISC",
+	"license": "MIT",
 	"dependencies": {
 		"oauth-1.0a": "^2.2.6",
 		"qs": "^6.9.1"

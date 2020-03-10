@@ -1,7 +1,11 @@
 {
-	"name": "@xyng/backend-adapter-argonauts",
-	"version": "1.0.0",
+	"name": "@xyng/yuoshi-backend-adapter-argonauts",
+	"version": "0.0.1",
 	"description": "",
+	"repository" : {
+		"type" : "git",
+		"url": "git+https://github.com/xyng/yuoshi-backend-adapter.git"
+	},
 	"main": "dist/main.cjs.js",
 	"module": "dist/main.esm.js",
 	"typings": "dist/main.d.ts",
@@ -14,9 +18,9 @@
 		"prepare": "npm run build"
 	},
 	"author": "Daniel Melchior",
-	"license": "ISC",
+	"license": "MIT",
 	"dependencies": {
-		"@xyng/backend-adapter": "1.0.0"
+		"@xyng/yuoshi-backend-adapter": "0.0.1"
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^11.0.1",

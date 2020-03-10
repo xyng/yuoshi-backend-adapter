@@ -1,7 +1,7 @@
 import {
 	NSUserAdapter,
 	RequestError,
-} from "@xyng/backend-adapter"
+} from "@xyng/yuoshi-backend-adapter"
 
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 

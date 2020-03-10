@@ -1,4 +1,4 @@
-import { AbstractPaginator, PaginationData, RequestAdapterConfiguration, RequestResponseType } from "@xyng/backend-adapter"
+import { AbstractPaginator, PaginationData, RequestAdapterConfiguration, RequestResponseType } from "@xyng/yuoshi-backend-adapter"
 
 export default class Paginator<T, Config> extends AbstractPaginator<T, Config> {
 	constructor(

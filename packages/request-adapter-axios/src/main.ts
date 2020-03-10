@@ -4,7 +4,7 @@ import {
 	NetworkError,
 	RequestAdapterConfiguration,
 	RequestResponseType, AbstractRequestAdapter, AuthenticationHandlerInterface,
-} from "@xyng/backend-adapter"
+} from "@xyng/yuoshi-backend-adapter"
 
 // @ts-ignore
 import URLSearchParams from "@ungap/url-search-params"

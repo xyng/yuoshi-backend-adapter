@@ -3,7 +3,7 @@ import {
 	NSCourseAdapter,
 	NSUserAdapter,
 	AsyncIterableWrapper
-} from "@xyng/backend-adapter"
+} from "@xyng/yuoshi-backend-adapter"
 
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 import Paginator from "../Paginator"
