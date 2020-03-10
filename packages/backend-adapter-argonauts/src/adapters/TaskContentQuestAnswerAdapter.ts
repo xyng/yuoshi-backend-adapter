@@ -1,4 +1,4 @@
-import { NSTaskContentQuestAnswerAdapter } from "@xyng/backend-adapter"
+import { NSTaskContentQuestAnswerAdapter } from "@xyng/yuoshi-backend-adapter"
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 import Paginator from "../Paginator"
 

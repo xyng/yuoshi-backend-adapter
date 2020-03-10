@@ -1,20 +1,14 @@
 {
 	"name": "@xyng/example-runtime",
-	"version": "1.0.0",
-	"main": "dist/main.cjs.js",
-	"module": "dist/main.esm.js",
-	"typings": "dist/main.d.ts",
-	"typescript": {
-		"definition": "dist/main.d.ts"
-	},
+	"private": true,
 	"scripts": {
 		"start": "node src/main.js"
 	},
 	"dependencies": {
 		"@rollup/plugin-html": "^0.1.1",
-		"@xyng/backend-adapter-argonauts": "1.0.0",
-		"@xyng/backend-adapter-studip": "1.0.0",
-		"@xyng/request-adapter-axios": "1.0.0",
+		"@xyng/yuoshi-backend-adapter": "^0.0.1",
+		"@xyng/yuoshi-backend-adapter-argonauts": "^0.0.1",
+		"@xyng/yuoshi-request-adapter-axios": "^0.0.1",
 		"rollup-plugin-livereload": "^1.0.4",
 		"rollup-plugin-node-builtins": "^2.1.2",
 		"rollup-plugin-serve": "^1.0.1"

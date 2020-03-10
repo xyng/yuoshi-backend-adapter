@@ -7,6 +7,11 @@ import { AbstractPaginator } from "./AbstractPaginator"
 export namespace NSTaskContentQuestAdapter {
 	export interface TaskContentQuest<T = any> extends DefaultEntity<T> {
 		title: string
+		question: string
+		image?: string
+		prePhrase?: string
+		content?: string
+		multiple: boolean,
 		answers: AsyncIterableWrapper<NSTaskContentQuestAnswerAdapter.TaskContentQuestAnswer>
 	}
 

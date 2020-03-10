@@ -10,7 +10,7 @@
 		],
 		"baseUrl": "./packages",
 		"paths": {
-			"@xyng/backend-adapter": ["backend-adapter/src"],
+			"@xyng/yuoshi-backend-adapter": ["backend-adapter/src"],
 			"@xyng/request-adapter-axios": ["request-adapter-axios/src"],
 			"@xyng/*": ["*/src"]
 		}
