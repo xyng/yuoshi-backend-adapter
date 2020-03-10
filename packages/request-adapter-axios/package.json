@@ -6,6 +6,10 @@
 		"type": "git",
 		"url": "git+https://github.com/xyng/yuoshi-backend-adapter.git"
 	},
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://npm.pkg.github.com/"
+	},
 	"main": "dist/main.cjs.js",
 	"module": "dist/main.esm.js",
 	"typings": "dist/main.d.ts",
