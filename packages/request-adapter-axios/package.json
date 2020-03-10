@@ -2,8 +2,8 @@
 	"name": "@xyng/yuoshi-request-adapter-axios",
 	"version": "1.0.0",
 	"description": "",
-	"repository" : {
-		"type" : "git",
+	"repository": {
+		"type": "git",
 		"url": "git+https://github.com/xyng/yuoshi-backend-adapter.git"
 	},
 	"main": "dist/main.cjs.js",
@@ -21,7 +21,7 @@
 	"license": "MIT",
 	"dependencies": {
 		"@ungap/url-search-params": "^0.1.4",
-		"@xyng/yuoshi-backend-adapter": "0.0.1"
+		"@xyng/yuoshi-backend-adapter": "^0.0.1"
 	},
 	"peerDependencies": {
 		"axios": "^0.19.1"

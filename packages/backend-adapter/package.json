@@ -2,8 +2,8 @@
 	"name": "@xyng/yuoshi-backend-adapter",
 	"version": "0.0.1",
 	"description": "",
-	"repository" : {
-		"type" : "git",
+	"repository": {
+		"type": "git",
 		"url": "git+https://github.com/xyng/yuoshi-backend-adapter.git"
 	},
 	"main": "dist/main.cjs.js",
