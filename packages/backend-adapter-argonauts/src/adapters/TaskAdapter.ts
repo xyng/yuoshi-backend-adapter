@@ -15,17 +15,19 @@ export default class TaskAdapter<
 			})
 
 			return this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/packages/${package_id}/tasks`, config)
-		}, (data): NSTaskAdapter.Task => {
-			return {
+		}, (data) => {
+			const task = {
 				id: data.id,
 				title: data.attributes.title,
 				description: data.attributes.description,
 				image: data.attributes.image,
-				type: data.attributes.kind,
-				isTraining: data.attributes.is_training,
 				credits: data.attributes.credits,
-				contents: AsyncIterableWrapper.fromAsyncIterable(this.backendAdapter.taskContentAdapter.getContentsForTask(data.id))
+				contents: AsyncIterableWrapper.fromAsyncIterable(
+					this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
+				)
 			}
+
+			return this.mapTaskToType(task, data.attributes.type)
 		});
 	}
 }

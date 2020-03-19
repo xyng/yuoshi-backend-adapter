@@ -70,4 +70,16 @@ export default class AsyncIterableWrapper<T> implements AsyncIterable<T> {
 
 		return arr
 	}
+
+	public async first(): Promise<T> {
+		const iterator = this[Symbol.asyncIterator]()
+
+		const { value } = await iterator.next()
+
+		if (value === undefined) {
+			throw new Error("Called first on empty iterator")
+		}
+
+		return value
+	}
 }

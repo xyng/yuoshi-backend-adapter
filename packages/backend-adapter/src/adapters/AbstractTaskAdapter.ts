@@ -1,13 +1,18 @@
 import { DefaultEntity, DefaultYuoshiAdapter } from "./DefaultYuoshiAdapter"
 import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerInterface"
-import { NSUserAdapter } from "./AbstractUserAdapter"
 import { AbstractPaginator } from "./AbstractPaginator"
-import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper";
-import { NSTaskContentAdapter } from "./AbstractTaskContentAdapter"
+
+import { BaseTaskConstructData } from "./Tasks/BaseTask"
+
+import { Survey } from "./Tasks/Survey"
+import { Multi } from "./Tasks/Multi"
+import { Drag } from "./Tasks/Drag"
+import { Cloze } from "./Tasks/Cloze"
+import { Tag } from "./Tasks/Tag"
+import { Memory } from "./Tasks/Memory"
+import { Card } from "./Tasks/Card"
 
 export namespace NSTaskAdapter {
-	import User = NSUserAdapter.User
-
 	export interface Task<T = any> extends DefaultEntity<T> {
 		title: string
 		description?: string
@@ -15,10 +20,30 @@ export namespace NSTaskAdapter {
 		type: string
 		isTraining: boolean
 		credits?: number
-		contents: AsyncIterableWrapper<NSTaskContentAdapter.TaskContent>
 	}
 
 	export abstract class AbstractTaskAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
+		protected mapTaskToType(task: BaseTaskConstructData, type: string) {
+			switch (type) {
+				case "survey":
+					return new Survey(task)
+				case "multi":
+					return new Multi(task)
+				case "drag":
+					return new Drag(task)
+				case "cloze":
+					return new Cloze(task)
+				case "tag":
+					return new Tag(task)
+				case "Memory":
+					return new Memory(task)
+				case "Card":
+					return new Card(task)
+				default:
+					throw new Error("Unknown Task type given");
+			}
+		}
+
 		abstract getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<Task, any>
 	}
 }
