@@ -8,7 +8,7 @@ interface TagContent {
 	tag: string
 }
 
-export class StaticTag extends StaticBaseTask<TagContent[]> {
+class StaticTag extends StaticBaseTask<TagContent[]> {
 	public readonly isTraining: boolean = false
 	public readonly type: string = "tag"
 	public contents: TagContent[]
