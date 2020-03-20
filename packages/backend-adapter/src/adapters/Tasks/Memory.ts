@@ -1,9 +1,33 @@
 import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
-import BaseTask from "./BaseTask"
+import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 
-export class Memory extends BaseTask {
+class MemoryItem {
+	constructor(
+		public readonly id: string,
+		protected readonly category_id: string,
+		public readonly text: string,
+		public readonly image?: string,
+	) {}
+
+	isPair(otherItem: MemoryItem) {
+		return otherItem.category_id === this.category_id
+	}
+}
+
+class StaticMemory extends StaticBaseTask<MemoryItem[]> {
+	readonly isTraining: boolean = false
+	readonly type: string = "memory"
+
+	public items: MemoryItem[]
+
+	protected init(contents: MemoryItem[]): void {
+		this.items = contents
+	}
+}
+
+export class Memory extends AsyncBaseTask<StaticMemory> {
 	public readonly type: string = "memory"
 	public readonly isTraining: boolean = false
 	public items: AsyncIterableWrapper<MemoryItem>
@@ -24,17 +48,11 @@ export class Memory extends BaseTask {
 			iterateItems()
 		)
 	}
-}
 
-class MemoryItem {
-	constructor(
-		public readonly id: string,
-		protected readonly category_id: string,
-		public readonly text: string,
-		public readonly image?: string,
-	) {}
-
-	isPair(otherItem: MemoryItem) {
-		return otherItem.category_id === this.category_id
+	public async getStatic(): Promise<StaticMemory> {
+		return new StaticMemory({
+			...this,
+			contents: await this.items.toArray()
+		});
 	}
 }

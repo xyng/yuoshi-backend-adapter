@@ -2,7 +2,7 @@ import { DefaultEntity, DefaultYuoshiAdapter } from "./DefaultYuoshiAdapter"
 import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerInterface"
 import { AbstractPaginator } from "./AbstractPaginator"
 
-import { BaseTaskConstructData } from "./Tasks/BaseTask"
+import { DefaultBaseTaskConstructData } from "./Tasks/BaseTask"
 
 import { Survey } from "./Tasks/Survey"
 import { Multi } from "./Tasks/Multi"
@@ -23,7 +23,7 @@ export namespace NSTaskAdapter {
 	}
 
 	export abstract class AbstractTaskAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		protected mapTaskToType(task: BaseTaskConstructData, type: string) {
+		protected mapTaskToType(task: DefaultBaseTaskConstructData, type: string) {
 			switch (type) {
 				case "survey":
 					return new Survey(task)

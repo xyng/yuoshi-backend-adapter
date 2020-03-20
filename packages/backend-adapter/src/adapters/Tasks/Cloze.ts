@@ -1,10 +1,20 @@
 import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
-import { NSTaskContentQuestAdapter } from "../AbstractTaskContentQuestAdapter"
-import BaseTask from "./BaseTask"
+import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 
-export class Cloze extends BaseTask {
+class StaticCloze extends StaticBaseTask<ClozeContent[]> {
+	readonly isTraining: boolean
+	readonly type: string
+
+	public contents: ClozeContent[]
+
+	protected init(contents: ClozeContent[]): void {
+		this.contents = contents
+	}
+}
+
+export class Cloze extends AsyncBaseTask<StaticCloze> {
 	public readonly type: string = "cloze"
 	public readonly isTraining: boolean = false
 	public contents: AsyncIterableWrapper<ClozeContent>
@@ -17,6 +27,13 @@ export class Cloze extends BaseTask {
 		}
 
 		this.contents = AsyncIterableWrapper.fromAsyncIterable(from())
+	}
+
+	async getStatic(): Promise<StaticCloze> {
+		return new StaticCloze({
+			...this,
+			contents: await this.contents.toArray()
+		});
 	}
 }
 

@@ -2,21 +2,40 @@ import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
 import { NSTaskContentQuestAdapter } from "../AbstractTaskContentQuestAdapter"
-import TaskContentQuest = NSTaskContentQuestAdapter.TaskContentQuest
-import BaseTask from "./BaseTask"
+import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 
-export class Drag extends BaseTask {
+interface CategoryItems {
+	id: string,
+	title: string
+}
+
+interface StatementItems {
+	id: string,
+	category_id: string,
+	text: string
+}
+
+class StaticDrag extends StaticBaseTask<{
+	categories: CategoryItems[]
+	statements: StatementItems[]
+}> {
+	readonly isTraining: boolean = false
+	readonly type: string = "drag"
+
+	public categories: CategoryItems[]
+	public statements: StatementItems[]
+
+	protected init(contents: { categories: CategoryItems[]; statements: StatementItems[] }): void {
+		this.categories = contents.categories
+		this.statements = contents.statements
+	}
+}
+
+export class Drag extends AsyncBaseTask<StaticDrag> {
 	public readonly type: string = "drag"
 	public readonly isTraining: boolean = false
-	public categories: AsyncIterableWrapper<{
-		id: string,
-		title: string
-	}>
-	public statements: AsyncIterableWrapper<{
-		id: string,
-		category_id: string,
-		text: string
-	}>
+	public categories: AsyncIterableWrapper<CategoryItems>
+	public statements: AsyncIterableWrapper<StatementItems>
 
 	protected init(contents: AsyncIterableWrapper<NSTaskContentAdapter.TaskContent>): void {
 		async function* iterateCategories() {
@@ -51,5 +70,15 @@ export class Drag extends BaseTask {
 		this.statements = AsyncIterableWrapper.fromAsyncIterable(
 			iterateStatements()
 		)
+	}
+
+	async getStatic(): Promise<StaticDrag> {
+		return new StaticDrag({
+			...this,
+			contents: {
+				categories: await this.categories.toArray(),
+				statements: await this.statements.toArray(),
+			}
+		});
 	}
 }

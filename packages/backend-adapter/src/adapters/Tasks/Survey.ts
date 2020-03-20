@@ -3,9 +3,19 @@ import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
 import { NSTaskContentQuestAdapter } from "../AbstractTaskContentQuestAdapter"
 import TaskContentQuest = NSTaskContentQuestAdapter.TaskContentQuest
-import BaseTask from "./BaseTask"
+import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 
-export class Survey extends BaseTask {
+class StaticSurvey extends StaticBaseTask<TaskContentQuest[]> {
+	public readonly isTraining: boolean = false
+	public readonly type: string = "survey"
+	public contents: TaskContentQuest[]
+
+	protected init(contents: TaskContentQuest[]): void {
+		this.contents = contents
+	}
+}
+
+export class Survey extends AsyncBaseTask<StaticSurvey> {
 	public readonly type: string = "survey"
 	public readonly isTraining: boolean = false
 	public contents: AsyncIterableWrapper<TaskContentQuest>
@@ -20,5 +30,12 @@ export class Survey extends BaseTask {
 		}
 
 		this.contents = AsyncIterableWrapper.fromAsyncIterable(from())
+	}
+
+	async getStatic(): Promise<StaticSurvey> {
+		return new StaticSurvey({
+			...this,
+			contents: await this.contents.toArray(),
+		});
 	}
 }
