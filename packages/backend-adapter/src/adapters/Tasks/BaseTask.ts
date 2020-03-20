@@ -10,6 +10,7 @@ interface BaseTaskConstructData<T> {
 	description?: string,
 	image?: string,
 	credits?: number,
+	isTraining?: boolean,
 	contents: T
 }
 

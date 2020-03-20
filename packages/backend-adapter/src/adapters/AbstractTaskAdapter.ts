@@ -11,6 +11,7 @@ import { Cloze } from "./Tasks/Cloze"
 import { Tag } from "./Tasks/Tag"
 import { Memory } from "./Tasks/Memory"
 import { Card } from "./Tasks/Card"
+import { Training } from "./Tasks/Training"
 
 export namespace NSTaskAdapter {
 	export interface Task<T = any> extends DefaultEntity<T> {
@@ -23,7 +24,7 @@ export namespace NSTaskAdapter {
 	}
 
 	export abstract class AbstractTaskAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		protected mapTaskToType(task: DefaultBaseTaskConstructData, type: string) {
+		protected mapTaskToType(task: DefaultBaseTaskConstructData, type?: string) {
 			switch (type) {
 				case "survey":
 					return new Survey(task)
@@ -40,6 +41,9 @@ export namespace NSTaskAdapter {
 				case "Card":
 					return new Card(task)
 				default:
+					if (!type || type.length === 0 && task.isTraining) {
+						return new Training(task)
+					}
 					throw new Error("Unknown Task type given");
 			}
 		}
