@@ -3,11 +3,13 @@ import { AsyncIterableWrapper, NSTaskAdapter } from "@xyng/yuoshi-backend-adapte
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 import Paginator from "../Paginator"
 
+type TaskTypeMap = ReturnType<TaskAdapter<any>['mapTaskToType']>
+
 export default class TaskAdapter<
 	RequestBackendConfigType
 > extends NSTaskAdapter.AbstractTaskAdapter<RequestBackendConfigType, StudipOauthAuthenticationHandler> {
-	getTasksForPackage(package_id: string, sequence?: number): Paginator<NSTaskAdapter.Task, any> {
-		return new Paginator<NSTaskAdapter.Task, any>((config) => {
+	getTasksForPackage(package_id: string, sequence?: number): Paginator<TaskTypeMap, any> {
+		return new Paginator<TaskTypeMap, any>((config) => {
 			config = this.requestAdapter.mergeConfig(config, {
 				params: {
 					"filter[sequence]": sequence

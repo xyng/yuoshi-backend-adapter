@@ -44,6 +44,6 @@ export namespace NSTaskAdapter {
 			}
 		}
 
-		abstract getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<Task, any>
+		abstract getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<ReturnType<AbstractTaskAdapter<RequestConfigType, AuthenticationHandler>['mapTaskToType']>, any>
 	}
 }
