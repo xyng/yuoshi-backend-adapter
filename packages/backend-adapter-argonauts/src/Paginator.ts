@@ -3,7 +3,7 @@ import { AbstractPaginator, PaginationData, RequestAdapterConfiguration, Request
 export default class Paginator<T, Config> extends AbstractPaginator<T, Config> {
 	constructor(
 		makeRequest: (config: RequestAdapterConfiguration<Config>) => Promise<RequestResponseType>,
-		protected mapData: (data: any) => Promise<T> | T = (data) => data
+		protected mapData: (data: any) => (Promise<T> | T) = (data) => data
 	) {
 		super({
 			total: 0,
