@@ -3,6 +3,7 @@ import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
 import { NSTaskContentQuestAdapter } from "../AbstractTaskContentQuestAdapter"
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
+import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
 interface CategoryItems {
 	id: string,
@@ -11,7 +12,6 @@ interface CategoryItems {
 
 interface StatementItems {
 	id: string,
-	category_id: string,
 	text: string
 }
 
@@ -59,7 +59,6 @@ export class Drag extends AsyncBaseTask<StaticDrag> {
 					for await (const answer of quest.answers) {
 						yield {
 							id: answer.id,
-							category_id: quest.id,
 							text: answer.content,
 						}
 					}
@@ -80,5 +79,26 @@ export class Drag extends AsyncBaseTask<StaticDrag> {
 				statements: await this.statements.toArray(),
 			}
 		});
+	}
+
+	createAnswer(answers: {
+		category_id: string,
+		items: string[]
+	}[]): NSUserTaskSolution.UserTaskSolutionModel {
+		return {
+			task_id: this.id,
+			answers: answers
+				.reduce((acc, item) => {
+					item.items.forEach((answer, index) => {
+						acc.push({
+							sequence: index,
+							quest_id: item.category_id,
+							answer_id: answer
+						})
+					})
+
+					return acc
+				}, [])
+		}
 	}
 }

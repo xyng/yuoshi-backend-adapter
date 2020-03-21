@@ -7,6 +7,7 @@ import { NSTaskAdapter } from "../adapters/AbstractTaskAdapter"
 import { NSTaskContentAdapter } from "../adapters/AbstractTaskContentAdapter"
 import { NSTaskContentQuestAdapter } from "../adapters/AbstractTaskContentQuestAdapter"
 import { NSTaskContentQuestAnswerAdapter } from "../adapters/AbstractTaskContentQuestAnswerAdapter"
+import { NSUserTaskSolution } from "../adapters/AbstractUserTaskSolutionAdapter"
 
 export interface BackendAdapterInterface<
 	RequestBackendConfigType,
@@ -19,4 +20,5 @@ export interface BackendAdapterInterface<
 	readonly taskContentAdapter: NSTaskContentAdapter.AbstractTaskContentAdapter<RequestBackendConfigType, AuthenticationHandler>
 	readonly taskContentQuestAdapter: NSTaskContentQuestAdapter.AbstractTaskContentQuestAdapter<RequestBackendConfigType, AuthenticationHandler>
 	readonly taskContentQuestAnswerAdapter: NSTaskContentQuestAnswerAdapter.AbstractTaskContentQuestAnswerAdapter<RequestBackendConfigType, AuthenticationHandler>
+	readonly userTaskSolutionAdapter: NSUserTaskSolution.AbstractUserTaskSolutionAdapter<RequestBackendConfigType, AuthenticationHandler>
 }

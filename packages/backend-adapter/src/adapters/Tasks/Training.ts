@@ -7,6 +7,7 @@ import { NSTaskContentQuestAdapter } from "../AbstractTaskContentQuestAdapter"
 import TaskContentQuest = NSTaskContentQuestAdapter.TaskContentQuest
 import { NSTaskContentQuestAnswerAdapter } from "../AbstractTaskContentQuestAnswerAdapter"
 import TaskContentQuestAnswer = NSTaskContentQuestAnswerAdapter.TaskContentQuestAnswer
+import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
 interface Content extends Omit<TaskContent, "quests"> {
 	quests: Quest[]
@@ -46,5 +47,17 @@ export class Training extends AsyncBaseTask<StaticTraining> {
 				})).toArray()
 			})).toArray()
 		})
+	}
+
+	createAnswer(
+		contents: {
+			quest_id: string
+			answer_id: string
+		}[]
+	): NSUserTaskSolution.UserTaskSolutionModel {
+		return {
+			task_id: this.id,
+			answers: contents
+		}
 	}
 }

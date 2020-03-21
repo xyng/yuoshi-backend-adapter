@@ -2,6 +2,7 @@ import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
+import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
 class MemoryItem {
 	constructor(
@@ -54,5 +55,42 @@ export class Memory extends AsyncBaseTask<StaticMemory> {
 			...this,
 			contents: await this.items.toArray()
 		});
+	}
+
+	createAnswer(
+		pairs: {
+			a: {
+				id: string,
+				category_id: string
+			},
+			b: {
+				id: string,
+				category_id: string
+			}
+		}[]
+	): NSUserTaskSolution.UserTaskSolutionModel {
+		return {
+			task_id: this.id,
+			answers: pairs
+				.reduce((current, { a, b }) => {
+					// do nothing if the pair is invalid
+					if (a.category_id !== b.category_id) {
+						return current
+					}
+
+					// push both parts of the pair to solution array
+					current.push({
+						answer_id: a.id,
+						quest_id: a.category_id,
+					})
+
+					current.push({
+						answer_id: b.id,
+						quest_id: b.category_id,
+					})
+
+					return current
+				}, [])
+		};
 	}
 }

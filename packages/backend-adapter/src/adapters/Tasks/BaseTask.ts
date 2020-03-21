@@ -3,6 +3,8 @@ import Task = NSTaskAdapter.Task
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 import TaskContent = NSTaskContentAdapter.TaskContent
 import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
+import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
+import UserTaskSolutionModel = NSUserTaskSolution.UserTaskSolutionModel
 
 interface BaseTaskConstructData<T> {
 	id: string,
@@ -16,7 +18,7 @@ interface BaseTaskConstructData<T> {
 
 export type DefaultBaseTaskConstructData = BaseTaskConstructData<AsyncIterableWrapper<TaskContent>>
 
-export abstract class StaticBaseTask<T> implements Task {
+export abstract class BaseTask<T> implements Task {
 	public readonly id: string
 	public readonly title: string
 	public readonly description: string | undefined
@@ -39,6 +41,9 @@ export abstract class StaticBaseTask<T> implements Task {
 	protected abstract init(contents: T): void
 }
 
-export abstract class AsyncBaseTask<T> extends StaticBaseTask<AsyncIterableWrapper<TaskContent>> {
+export abstract class StaticBaseTask<T> extends BaseTask<T> {}
+
+export abstract class AsyncBaseTask<T> extends BaseTask<AsyncIterableWrapper<TaskContent>> {
 	public abstract getStatic(): Promise<T>;
+	public abstract createAnswer(answer: any): UserTaskSolutionModel
 }

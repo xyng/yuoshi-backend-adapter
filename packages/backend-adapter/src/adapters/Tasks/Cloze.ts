@@ -2,6 +2,7 @@ import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
+import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
 class StaticCloze extends StaticBaseTask<ClozeContent[]> {
 	readonly isTraining: boolean
@@ -22,7 +23,7 @@ export class Cloze extends AsyncBaseTask<StaticCloze> {
 	protected init(contents: AsyncIterableWrapper<NSTaskContentAdapter.TaskContent>): void {
 		async function* from() {
 			for await (const content of contents) {
-				yield new ClozeContent(content.content)
+				yield new ClozeContent(content.id, content.content)
 			}
 		}
 
@@ -35,10 +36,29 @@ export class Cloze extends AsyncBaseTask<StaticCloze> {
 			contents: await this.contents.toArray()
 		});
 	}
+
+	createAnswer(clozes: {
+		cloze_id: string,
+		inputs: {
+			input_id: string,
+			value: string
+		}[]
+	}[]): NSUserTaskSolution.UserTaskSolutionModel {
+		return {
+			task_id: this.id,
+			contents: clozes.map((cloze) => {
+				return {
+					content_id: cloze.cloze_id,
+					value: JSON.stringify(cloze.inputs)
+				}
+			})
+		};
+	}
 }
 
 class ClozeContent {
 	constructor(
+		public id: string,
 		protected content: string
 	) {}
 
@@ -46,6 +66,8 @@ class ClozeContent {
 		inputId: string,
 		content: string
 	}[] {
+		// TODO: map the gaps to quests?
+
 		const inputRegex = new RegExp(/W*##(\d)##W*/, "gm")
 		const matches = this.content.match(inputRegex)
 		const parts = this.content.split(inputRegex)

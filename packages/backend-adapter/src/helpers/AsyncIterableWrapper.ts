@@ -8,17 +8,21 @@ export default class AsyncIterableWrapper<T> implements AsyncIterable<T> {
 	}
 
 	static fromArray<T>(array: T[]) {
+		return AsyncIterableWrapper.fromIterable(array)
+	}
+
+	static fromAsyncIterable<T>(iterable: AsyncIterable<T>) {
+		return new AsyncIterableWrapper(iterable[Symbol.asyncIterator]())
+	}
+
+	static fromIterable<T>(iterable: Iterable<T>) {
 		async function* from() {
-			for (const item of array) {
+			for (const item of iterable) {
 				yield item
 			}
 		}
 
 		return new AsyncIterableWrapper<T>(from())
-	}
-
-	static fromAsyncIterable<T>(iterable: AsyncIterable<T>) {
-		return new AsyncIterableWrapper(iterable[Symbol.asyncIterator]())
 	}
 
 	public map<M>(mapper: (item: T) => Promise<M> | M): AsyncIterableWrapper<M> {

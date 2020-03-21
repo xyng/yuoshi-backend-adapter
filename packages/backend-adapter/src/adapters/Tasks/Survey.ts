@@ -4,6 +4,7 @@ import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 import { NSTaskContentQuestAdapter } from "../AbstractTaskContentQuestAdapter"
 import TaskContentQuest = NSTaskContentQuestAdapter.TaskContentQuest
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
+import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
 class StaticSurvey extends StaticBaseTask<TaskContentQuest[]> {
 	public readonly isTraining: boolean = false
@@ -37,5 +38,14 @@ export class Survey extends AsyncBaseTask<StaticSurvey> {
 			...this,
 			contents: await this.contents.toArray(),
 		});
+	}
+
+	createAnswer(
+		answers: NSUserTaskSolution.UserTaskSolutionModel['answers']
+	): NSUserTaskSolution.UserTaskSolutionModel {
+		return {
+			task_id: this.id,
+			answers,
+		}
 	}
 }
