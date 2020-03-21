@@ -31,3 +31,13 @@ export { NSUserTaskSolution } from "./adapters/AbstractUserTaskSolutionAdapter"
 
 // Helpers
 export { default as AsyncIterableWrapper } from "./helpers/AsyncIterableWrapper"
+
+// Tasks
+export { Survey } from "./adapters/Tasks/Survey"
+export { Multi } from "./adapters/Tasks/Multi"
+export { Drag } from "./adapters/Tasks/Drag"
+export { Cloze } from "./adapters/Tasks/Cloze"
+export { Tag } from "./adapters/Tasks/Tag"
+export { Memory } from "./adapters/Tasks/Memory"
+export { Card } from "./adapters/Tasks/Card"
+export { Training } from "./adapters/Tasks/Training"

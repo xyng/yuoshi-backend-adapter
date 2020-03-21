@@ -5,8 +5,8 @@ import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
 class StaticCloze extends StaticBaseTask<ClozeContent[]> {
-	readonly isTraining: boolean
-	readonly type: string
+	readonly type: string = "cloze"
+	readonly isTraining: boolean = false
 
 	public contents: ClozeContent[]
 

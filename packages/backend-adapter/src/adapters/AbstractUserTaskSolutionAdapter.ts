@@ -21,20 +21,46 @@ export namespace NSUserTaskSolution {
 		contents: AsyncIterableWrapper<Omit<UserTaskContentSolution, "task_solution_id">>
 	}
 
+	// splitting up the union-type-def into multiple interfaces seems to be
+	// necessary as of typescript 3.8. feel free to shorten this when it becomes
+	// possible!
+
+	interface BaseAnswer {
+		quest_id: string
+		sequence?: number
+	}
+
+	interface NormalAnswer extends BaseAnswer {
+		answer_id: string
+		custom: never
+	}
+
+	interface CustomAnswer extends BaseAnswer {
+		custom: string
+		answer_id: never
+	}
+
+	type Answer = NormalAnswer | CustomAnswer
+
+	interface BaseContent {
+		content_id: string
+		value?: string
+		answers?: Answer[]
+	}
+
+	interface ContentWithValue extends BaseContent {
+		value: string
+	}
+
+	interface ContentWithAnswers extends BaseContent {
+		answers: Answer[]
+	}
+
+	type Content = ContentWithAnswers | ContentWithValue
+
 	export interface UserTaskSolutionModel {
 		task_id: string
-		contents?: ({
-			content_id: string
-			value: string
-		})[]
-		answers?: ({
-			quest_id: string
-			sequence?: number,
-		} & ({
-			answer_id: string
-		} | {
-			custom: string
-		}))[]
+		contents?: Content[]
 	}
 
 	export abstract class AbstractUserTaskSolutionAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {

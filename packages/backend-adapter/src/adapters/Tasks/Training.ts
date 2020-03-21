@@ -51,13 +51,16 @@ export class Training extends AsyncBaseTask<StaticTraining> {
 
 	createAnswer(
 		contents: {
-			quest_id: string
-			answer_id: string
+			content_id: string
+			answers: {
+				quest_id: string
+				answer_id: string
+			}[]
 		}[]
 	): NSUserTaskSolution.UserTaskSolutionModel {
 		return {
 			task_id: this.id,
-			answers: contents
+			contents: contents
 		}
 	}
 }

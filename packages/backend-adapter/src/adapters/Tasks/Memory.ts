@@ -7,7 +7,8 @@ import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 class MemoryItem {
 	constructor(
 		public readonly id: string,
-		protected readonly category_id: string,
+		public readonly category_id: string,
+		public readonly content_id: string,
 		public readonly text: string,
 		public readonly image?: string,
 	) {}
@@ -39,7 +40,7 @@ export class Memory extends AsyncBaseTask<StaticMemory> {
 				for await (const quest of content.quests) {
 					for await (const answer of quest.answers) {
 						// TODO: add image
-						yield new MemoryItem(answer.id, quest.id, answer.content)
+						yield new MemoryItem(answer.id, quest.id, content.id, answer.content)
 					}
 				}
 			}
@@ -61,36 +62,37 @@ export class Memory extends AsyncBaseTask<StaticMemory> {
 		pairs: {
 			a: {
 				id: string,
+				content_id: string,
 				category_id: string
 			},
 			b: {
 				id: string,
+				content_id: string,
 				category_id: string
 			}
 		}[]
 	): NSUserTaskSolution.UserTaskSolutionModel {
-		return {
-			task_id: this.id,
-			answers: pairs
-				.reduce((current, { a, b }) => {
-					// do nothing if the pair is invalid
-					if (a.category_id !== b.category_id) {
-						return current
-					}
-
-					// push both parts of the pair to solution array
-					current.push({
-						answer_id: a.id,
-						quest_id: a.category_id,
-					})
-
-					current.push({
-						answer_id: b.id,
-						quest_id: b.category_id,
-					})
-
+		return this.createSolutionFromContentAnswers(pairs
+			.reduce((current, { a, b }) => {
+				// do nothing if the pair is invalid
+				if (a.category_id !== b.category_id) {
 					return current
-				}, [])
-		};
+				}
+
+				// push both parts of the pair to solution array
+				current.push({
+					answer_id: a.id,
+					quest_id: a.category_id,
+					content_id: a.content_id
+				})
+
+				current.push({
+					answer_id: b.id,
+					quest_id: b.category_id,
+					content_id: a.content_id
+				})
+
+				return current
+			}, []))
 	}
 }

@@ -43,6 +43,7 @@ export class Drag extends AsyncBaseTask<StaticDrag> {
 				for await (const quest of content.quests) {
 					yield {
 						id: quest.id,
+						content_id: content.id,
 						title: quest.question,
 					}
 				}
@@ -83,22 +84,21 @@ export class Drag extends AsyncBaseTask<StaticDrag> {
 
 	createAnswer(answers: {
 		category_id: string,
+		content_id: string,
 		items: string[]
 	}[]): NSUserTaskSolution.UserTaskSolutionModel {
-		return {
-			task_id: this.id,
-			answers: answers
-				.reduce((acc, item) => {
-					item.items.forEach((answer, index) => {
-						acc.push({
-							sequence: index,
-							quest_id: item.category_id,
-							answer_id: answer
-						})
+		return this.createSolutionFromContentAnswers(answers
+			.reduce((acc, item) => {
+				item.items.forEach((answer, index) => {
+					acc.push({
+						sequence: index,
+						content_id: item.content_id,
+						quest_id: item.category_id,
+						answer_id: answer
 					})
+				})
 
-					return acc
-				}, [])
-		}
+				return acc
+			}, []))
 	}
 }

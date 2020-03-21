@@ -23,6 +23,8 @@ export namespace NSTaskAdapter {
 		credits?: number
 	}
 
+	type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>['mapTaskToType']>
+
 	export abstract class AbstractTaskAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
 		protected mapTaskToType(task: DefaultBaseTaskConstructData, type?: string) {
 			switch (type) {
@@ -36,7 +38,7 @@ export namespace NSTaskAdapter {
 					return new Cloze(task)
 				case "tag":
 					return new Tag(task)
-				case "Memory":
+				case "memory":
 					return new Memory(task)
 				case "Card":
 					return new Card(task)
@@ -48,6 +50,7 @@ export namespace NSTaskAdapter {
 			}
 		}
 
-		abstract getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<ReturnType<AbstractTaskAdapter<RequestConfigType, AuthenticationHandler>['mapTaskToType']>, any>
+		abstract getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<TaskTypeMap, any>
+		abstract getNextTask(package_id: string): Promise<TaskTypeMap|undefined>
 	}
 }

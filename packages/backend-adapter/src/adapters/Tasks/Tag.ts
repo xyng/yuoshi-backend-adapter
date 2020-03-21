@@ -32,6 +32,7 @@ export class Tag extends AsyncBaseTask<StaticTag> {
 						yield {
 							id: answer.id,
 							category_id: quest.id,
+							content_id: content.id,
 							tag: answer.content,
 						}
 					}
@@ -50,17 +51,16 @@ export class Tag extends AsyncBaseTask<StaticTag> {
 	}
 
 	createAnswer(answers: {
+		content_id: string,
 		category_id: string,
 		answer_id: string,
 	}[]): NSUserTaskSolution.UserTaskSolutionModel {
-		return {
-			task_id: this.id,
-			answers: answers.map((answer) => {
-				return {
-					quest_id: answer.category_id,
-					answer_id: answer.answer_id
-				}
-			})
-		};
+		return this.createSolutionFromContentAnswers(answers.map((answer) => {
+			return {
+				content_id: answer.content_id,
+				quest_id: answer.category_id,
+				answer_id: answer.answer_id
+			}
+		}))
 	}
 }

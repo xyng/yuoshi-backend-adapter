@@ -126,22 +126,34 @@ const base = "http://localhost:8123"
 	const packages = argonautsAdapter.packageAdapter.getPackagesForCourse("a07535cf2f8a72df33c12ddfa4b53dde")
 	try {
 		for await (let packageItem of packages) {
-			console.log(packageItem)
+			const task = await argonautsAdapter.taskAdapter.getNextTask(packageItem.id)
+			if (!task) {
+				continue;
+			}
 
-			for await (let task of packageItem.tasks) {
-				console.log(task)
+			if (task.type === "multi") {
+				const staticTask = await task.getStatic()
+				const answers = []
 
-				for await (let content of task.contents) {
-					console.log(content)
+				for (const content of staticTask.contents) {
+					console.log("Q: " + content.content)
 
-					for await (let quest of content.quests) {
-						console.log(quest)
+					const answerString = content.answers.reduce((acc, item, index) => {
+						return acc + `${index}) ${item.content}`
+					}, "\n")
 
-						for await (let answer of quest.answers) {
-							console.log(answer)
-						}
-					}
+					const answer = await askQuestion("Welche Antwort ist korrekt?" + answerString)
+
+					answers.push({
+						content_id: content.content_id,
+						quest_id: content.id,
+						answer_id: content.answers[parseInt(answer)].id
+					})
 				}
+
+				const solution = task.createAnswer(answers)
+
+				await argonautsAdapter.userTaskSolutionAdapter.saveSolution(solution)
 			}
 		}
 	} catch (e) {

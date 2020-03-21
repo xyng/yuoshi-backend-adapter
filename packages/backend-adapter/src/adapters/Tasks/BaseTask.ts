@@ -6,7 +6,7 @@ import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 import UserTaskSolutionModel = NSUserTaskSolution.UserTaskSolutionModel
 
-interface BaseTaskConstructData<T> {
+export interface BaseTaskConstructData<T> {
 	id: string,
 	title: string,
 	description?: string,
@@ -46,4 +46,40 @@ export abstract class StaticBaseTask<T> extends BaseTask<T> {}
 export abstract class AsyncBaseTask<T> extends BaseTask<AsyncIterableWrapper<TaskContent>> {
 	public abstract getStatic(): Promise<T>;
 	public abstract createAnswer(answer: any): UserTaskSolutionModel
+
+	protected createSolutionFromContentAnswers(
+		answers: {
+			content_id: string
+			quest_id: string
+			answer_id: string
+		}[]
+	): UserTaskSolutionModel {
+		const contents: {
+			[key: string]: {
+				quest_id: string
+				answer_id: string
+			}[]
+		} = {}
+
+		answers.forEach((answer) => {
+			contents[answer.content_id] = contents[answer.content_id] || []
+
+			contents[answer.content_id].push({
+				quest_id: answer.quest_id,
+				answer_id: answer.answer_id,
+			})
+		})
+
+		return {
+			task_id: this.id,
+			contents: Object
+				.entries(contents)
+				.map(([key, answers]) => {
+					return {
+						content_id: key,
+						answers,
+					}
+				})
+		}
+	}
 }
