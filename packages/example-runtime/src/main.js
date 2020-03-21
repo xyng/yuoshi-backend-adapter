@@ -2,7 +2,7 @@ const RequestAdapterAxios = require("@xyng/yuoshi-request-adapter-axios")
 
 const { BackendAdapter, StudipOauthAuthenticationHandler } = require("@xyng/yuoshi-backend-adapter-argonauts")
 
-const { RequestError } = require("@xyng/yuoshi-backend-adapter")
+const { AsyncIterableWrapper, RequestError } = require("@xyng/yuoshi-backend-adapter")
 
 const readline = require("readline")
 
@@ -14,7 +14,7 @@ function askQuestion(query) {
         output: process.stdout,
     });
 
-    return new Promise(resolve => rl.question(query, ans => {
+    return new Promise(resolve => rl.question(query + "\n", ans => {
         rl.close();
         resolve(ans);
     }))
@@ -123,12 +123,25 @@ const base = "http://localhost:8123"
 	// const data = await makeRequest(backendAdapter.courseAdapter.getCourses("e7a0a84b161f3e8c09b4a0a2e8a58147"))
 	// const data = await makeRequest(backendAdapter.courseAdapter.getCourses("76ed43ef286fb55cf9e41beadb484a9f"))
 
+	console.log("Lade Packages. Einen Moment bitte ...")
 	const packages = argonautsAdapter.packageAdapter.getPackagesForCourse("a07535cf2f8a72df33c12ddfa4b53dde")
 	try {
-		for await (let packageItem of packages) {
+		const packageArray = await AsyncIterableWrapper.fromAsyncIterable(packages).toArray()
+
+		const packageString = packageArray.reduce((acc, item, index) => {
+			return acc + `${ index }) ${ item.title }`
+		}, "\n")
+
+		const packageId = await askQuestion("Welches Package möchtest du spielem?" + packageString)
+
+		const packageItem = packageArray[packageId]
+
+		while (true) {
+			console.log("Lade nächsten Task. Einen Moment bitte ...")
 			const task = await argonautsAdapter.taskAdapter.getNextTask(packageItem.id)
 			if (!task) {
-				continue;
+				console.log("Keine weiteren Tasks. Du bist fertig!")
+				break
 			}
 
 			if (task.type === "multi") {
@@ -136,10 +149,10 @@ const base = "http://localhost:8123"
 				const answers = []
 
 				for (const content of staticTask.contents) {
-					console.log("Q: " + content.content)
+					console.log("Frage: " + content.question)
 
 					const answerString = content.answers.reduce((acc, item, index) => {
-						return acc + `${index}) ${item.content}`
+						return acc + `${ index }) ${ item.content }`
 					}, "\n")
 
 					const answer = await askQuestion("Welche Antwort ist korrekt?" + answerString)
