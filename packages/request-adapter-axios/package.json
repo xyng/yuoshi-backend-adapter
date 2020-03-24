@@ -7,8 +7,7 @@
 		"url": "git+https://github.com/xyng/yuoshi-backend-adapter.git"
 	},
 	"publishConfig": {
-		"access": "public",
-		"registry": "https://npm.pkg.github.com/"
+		"access": "public"
 	},
 	"main": "dist/main.cjs.js",
 	"module": "dist/main.esm.js",
