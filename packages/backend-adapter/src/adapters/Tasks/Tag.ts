@@ -9,13 +9,17 @@ interface TagContent {
 	tag: string
 }
 
-class StaticTag extends StaticBaseTask<TagContent[]> {
+export class StaticTag extends StaticBaseTask<TagContent[]> {
 	public readonly isTraining: boolean = false
 	public readonly type: string = "tag"
 	public contents: TagContent[]
 
 	protected init(contents: TagContent[]): void {
 		this.contents = contents
+	}
+
+	protected getContents(): TagContent[] {
+		return this.contents;
 	}
 }
 

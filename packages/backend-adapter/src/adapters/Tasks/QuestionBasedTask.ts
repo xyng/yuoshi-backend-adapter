@@ -19,6 +19,10 @@ export abstract class QuestionBasedStaticTask extends StaticBaseTask<Quest[]> {
 	protected init(contents: Quest[]): void {
 		this.contents = contents
 	}
+
+	protected getContents(): Quest[] {
+		return this.contents
+	}
 }
 
 export abstract class QuestionBasedTask<T extends QuestionBasedStaticTask> extends AsyncBaseTask<T> {

@@ -12,6 +12,7 @@ import { Tag } from "./Tasks/Tag"
 import { Memory } from "./Tasks/Memory"
 import { Card } from "./Tasks/Card"
 import { Training } from "./Tasks/Training"
+import TaskFactory from "./Tasks/TaskFactory"
 
 export namespace NSTaskAdapter {
 	export interface Task<T = any> extends DefaultEntity<T> {
@@ -23,34 +24,26 @@ export namespace NSTaskAdapter {
 		credits?: number
 	}
 
+	export enum TaskTypeName {
+		SURVEY = "survey",
+		MULTI = "multi",
+		DRAG = "drag",
+		CLOZE = "cloze",
+		TAG = "tag",
+		MEMORY = "memory",
+		CARD = "card",
+		TRAINING = "training"
+	}
+
 	type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>['mapTaskToType']>
 
 	export abstract class AbstractTaskAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		protected mapTaskToType(task: DefaultBaseTaskConstructData, type?: string) {
-			switch (type) {
-				case "survey":
-					return new Survey(task)
-				case "multi":
-					return new Multi(task)
-				case "drag":
-					return new Drag(task)
-				case "cloze":
-					return new Cloze(task)
-				case "tag":
-					return new Tag(task)
-				case "memory":
-					return new Memory(task)
-				case "Card":
-					return new Card(task)
-				default:
-					if (!type || type.length === 0 && task.isTraining) {
-						return new Training(task)
-					}
-					throw new Error("Unknown Task type given");
-			}
+		protected mapTaskToType(task: DefaultBaseTaskConstructData, type: TaskTypeName) {
+			return TaskFactory.getTask(type, task)
 		}
 
 		abstract getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<TaskTypeMap, any>
 		abstract getNextTask(package_id: string): Promise<TaskTypeMap|undefined>
+		abstract getTask(task_id: string): Promise<TaskTypeMap|undefined>
 	}
 }

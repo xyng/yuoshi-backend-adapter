@@ -17,13 +17,17 @@ interface Quest extends Omit<TaskContentQuest, "answers"> {
 	answers: TaskContentQuestAnswer[]
 }
 
-class StaticTraining extends StaticBaseTask<Content[]> {
-	public readonly isTraining: boolean = false
+export class StaticTraining extends StaticBaseTask<Content[]> {
+	public readonly isTraining: boolean = true
 	public readonly type: string = "training"
 	public contents: Content[]
 
 	protected init(contents: Content[]): void {
 		this.contents = contents
+	}
+
+	protected getContents(): Content[] {
+		return this.contents;
 	}
 }
 

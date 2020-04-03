@@ -33,7 +33,7 @@ export default class TaskAdapter<
 		});
 	}
 
-	async getNextTask(package_id: string): Promise<TaskTypeMap> {
+	async getNextTask(package_id: string): Promise<TaskTypeMap|undefined> {
 		const { data: { data } } = await this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/packages/${package_id}/nextTask`)
 
 		if (!data) {
@@ -51,4 +51,23 @@ export default class TaskAdapter<
 			)
 		}, data.attributes.kind)
     }
+
+    async getTask(task_id: string): Promise<TaskTypeMap|undefined> {
+		const { data: { data } } = await this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/tasks/${task_id}`)
+
+		if (!data) {
+			return undefined;
+		}
+
+		return this.mapTaskToType({
+			id: data.id,
+			title: data.attributes.title,
+			description: data.attributes.description,
+			image: data.attributes.image,
+			credits: data.attributes.credits,
+			contents: AsyncIterableWrapper.fromAsyncIterable(
+				this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
+			)
+		}, data.attributes.kind)
+	}
 }

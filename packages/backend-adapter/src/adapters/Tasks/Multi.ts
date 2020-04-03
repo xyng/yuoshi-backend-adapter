@@ -1,7 +1,7 @@
 import { Quest, QuestionBasedStaticTask, QuestionBasedTask } from "./QuestionBasedTask"
 import { BaseTaskConstructData } from "./BaseTask"
 
-class StaticMulti extends QuestionBasedStaticTask {
+export class StaticMulti extends QuestionBasedStaticTask {
 	public readonly isTraining: boolean = false
 	public readonly type: string = "multi"
 }

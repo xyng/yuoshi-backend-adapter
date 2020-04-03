@@ -27,20 +27,20 @@ export namespace NSUserTaskSolution {
 
 	interface BaseAnswer {
 		quest_id: string
-		sequence?: number
+		sort?: number
 	}
 
 	interface NormalAnswer extends BaseAnswer {
 		answer_id: string
-		custom: never
+		custom?: never
 	}
 
 	interface CustomAnswer extends BaseAnswer {
 		custom: string
-		answer_id: never
+		answer_id?: never
 	}
 
-	type Answer = NormalAnswer | CustomAnswer
+	export type Answer = NormalAnswer | CustomAnswer
 
 	interface BaseContent {
 		content_id: string
@@ -50,13 +50,15 @@ export namespace NSUserTaskSolution {
 
 	interface ContentWithValue extends BaseContent {
 		value: string
+		answers?: never
 	}
 
 	interface ContentWithAnswers extends BaseContent {
 		answers: Answer[]
+		value?: never
 	}
 
-	type Content = ContentWithAnswers | ContentWithValue
+	export type Content = ContentWithAnswers | ContentWithValue
 
 	export interface UserTaskSolutionModel {
 		task_id: string
@@ -64,6 +66,32 @@ export namespace NSUserTaskSolution {
 	}
 
 	export abstract class AbstractUserTaskSolutionAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		public abstract saveSolution(solution: UserTaskSolutionModel): Promise<void>
+		public abstract getCurrentTaskPosition(task_id: string, solution_id?: string): Promise<{
+			id: string
+			current_content?: string
+			current_quest?: string
+		}>
+
+		public abstract saveContentSolution(content_id: string, value: object): Promise<{
+			id: string,
+			value: string
+		} | undefined>
+
+		public abstract saveQuestSolution(quest_id: string, answers: Answer[]): Promise<{
+			id: string,
+			is_correct: boolean
+			score: number
+			sent_solution: boolean
+		} | undefined>
+
+		public abstract getSampleSolution(quest_solution_id: string): Promise<{
+			quest_id: string
+			answers: {
+				id: string
+				sort: number | undefined
+				is_correct: boolean
+				content: string
+			}[]
+		} | undefined>
 	}
 }

@@ -1,4 +1,5 @@
 import { RequestAdapterConfiguration, RequestResponseType } from "../interfaces/RequestAdapterInterface"
+import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper"
 
 export interface PaginationInfo {
 	page: number,
@@ -39,5 +40,9 @@ export abstract class AbstractPaginator<T, Config> implements AsyncIterable<T> {
 				yield item
 			}
 		}
+	}
+
+	public getWrapped(doBuffer = true) {
+		return AsyncIterableWrapper.fromAsyncIterable(this, doBuffer)
 	}
 }

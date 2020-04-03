@@ -1,4 +1,4 @@
-export default class AsyncIterableWrapper<T> implements AsyncIterable<T> {
+class AsyncIterableClass<T> implements AsyncIterable<T> {
 	constructor(
 		protected iterator: AsyncIterator<T>
 	) {}
@@ -6,23 +6,65 @@ export default class AsyncIterableWrapper<T> implements AsyncIterable<T> {
 	[Symbol.asyncIterator](): AsyncIterator<T> {
 		return this.iterator
 	}
+}
 
-	static fromArray<T>(array: T[]) {
-		return AsyncIterableWrapper.fromIterable(array)
+export default class AsyncIterableWrapper<T> implements AsyncIterable<T> {
+	protected done = false
+	protected buffer: T[] = []
+	protected iterator: AsyncIterableClass<T>
+	constructor(
+		iterator: AsyncIterator<T>,
+		protected repeatable = true
+	) {
+		this.iterator = new AsyncIterableClass<T>(iterator)
 	}
 
-	static fromAsyncIterable<T>(iterable: AsyncIterable<T>) {
-		return new AsyncIterableWrapper(iterable[Symbol.asyncIterator]())
+	getIterable(): AsyncIterable<T> {
+		return this
 	}
 
-	static fromIterable<T>(iterable: Iterable<T>) {
+	async *[Symbol.asyncIterator](): AsyncIterator<T> {
+		if (!this.repeatable) {
+			for await (const item of this.iterator) {
+				yield item
+			}
+
+			return
+		}
+
+		if (this.done) {
+			for (const item of this.buffer) {
+				yield item
+			}
+
+			return
+		}
+
+		for await (const item of this.iterator) {
+			this.buffer.push(item)
+
+			yield item
+		}
+
+		this.done = true
+	}
+
+	static fromArray<T>(array: T[], repeatable = true) {
+		return AsyncIterableWrapper.fromIterable(array, repeatable)
+	}
+
+	static fromAsyncIterable<T>(iterable: AsyncIterable<T>, repeatable = true) {
+		return new AsyncIterableWrapper(iterable[Symbol.asyncIterator](), repeatable)
+	}
+
+	static fromIterable<T>(iterable: Iterable<T>, repeatable = true) {
 		async function* from() {
 			for (const item of iterable) {
 				yield item
 			}
 		}
 
-		return new AsyncIterableWrapper<T>(from())
+		return new AsyncIterableWrapper<T>(from(), repeatable)
 	}
 
 	public map<M>(mapper: (item: T) => Promise<M> | M): AsyncIterableWrapper<M> {

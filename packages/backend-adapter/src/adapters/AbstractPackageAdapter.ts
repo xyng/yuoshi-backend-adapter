@@ -8,6 +8,8 @@ import { NSTaskAdapter } from "./AbstractTaskAdapter"
 export namespace NSPackageAdapter {
 	export interface Package<T = any> extends DefaultEntity<T> {
 		title: string
+		slug: string
+		playable: boolean
 		description?: string
 		tasks: AsyncIterableWrapper<NSTaskAdapter.Task>
 	}

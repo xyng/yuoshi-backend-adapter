@@ -12,7 +12,6 @@ export interface BaseTaskConstructData<T> {
 	description?: string,
 	image?: string,
 	credits?: number,
-	isTraining?: boolean,
 	contents: T
 }
 
@@ -41,28 +40,69 @@ export abstract class BaseTask<T> implements Task {
 	protected abstract init(contents: T): void
 }
 
-export abstract class StaticBaseTask<T> extends BaseTask<T> {}
+export abstract class StaticBaseTask<T> extends BaseTask<T> {
+	protected abstract getContents(): T
+
+	typeName(): string {
+		return this.type
+	}
+
+	toJSONValue(): BaseTaskConstructData<T> {
+		return {
+			id: this.id,
+			title: this.title,
+			description: this.description,
+			image: this.image,
+			credits: this.credits,
+			contents: this.getContents(),
+		}
+	}
+}
+
+interface BaseAnswer {
+	quest_id: string
+	answer_id?: string
+	custom?: string
+}
+
+interface CustomAnswer extends BaseAnswer {
+	custom: string
+	answer_id?: never
+}
+
+interface StaticAnswer extends BaseAnswer {
+	custom?: never
+	answer_id: string
+}
+
+type Answer = CustomAnswer | StaticAnswer
+
+type AnswerInput = Answer & {
+	content_id: string
+}
 
 export abstract class AsyncBaseTask<T> extends BaseTask<AsyncIterableWrapper<TaskContent>> {
 	public abstract getStatic(): Promise<T>;
 	public abstract createAnswer(answer: any): UserTaskSolutionModel
 
 	protected createSolutionFromContentAnswers(
-		answers: {
-			content_id: string
-			quest_id: string
-			answer_id: string
-		}[]
+		answers: AnswerInput[]
 	): UserTaskSolutionModel {
 		const contents: {
-			[key: string]: {
-				quest_id: string
-				answer_id: string
-			}[]
+			[key: string]: Answer[]
 		} = {}
 
 		answers.forEach((answer) => {
 			contents[answer.content_id] = contents[answer.content_id] || []
+
+			if (answer.custom) {
+				contents[answer.content_id].push({
+					quest_id: answer.quest_id,
+					custom: answer.custom,
+				})
+
+				return
+			}
 
 			contents[answer.content_id].push({
 				quest_id: answer.quest_id,

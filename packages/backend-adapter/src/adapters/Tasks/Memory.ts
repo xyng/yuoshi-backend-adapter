@@ -18,7 +18,7 @@ class MemoryItem {
 	}
 }
 
-class StaticMemory extends StaticBaseTask<MemoryItem[]> {
+export class StaticMemory extends StaticBaseTask<MemoryItem[]> {
 	readonly isTraining: boolean = false
 	readonly type: string = "memory"
 
@@ -26,6 +26,10 @@ class StaticMemory extends StaticBaseTask<MemoryItem[]> {
 
 	protected init(contents: MemoryItem[]): void {
 		this.items = contents
+	}
+
+	protected getContents(): MemoryItem[] {
+		return this.items;
 	}
 }
 

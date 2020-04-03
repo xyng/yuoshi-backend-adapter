@@ -15,10 +15,11 @@ interface StatementItems {
 	text: string
 }
 
-class StaticDrag extends StaticBaseTask<{
+type StaticDragContent = {
 	categories: CategoryItems[]
 	statements: StatementItems[]
-}> {
+}
+export class StaticDrag extends StaticBaseTask<StaticDragContent> {
 	readonly isTraining: boolean = false
 	readonly type: string = "drag"
 
@@ -28,6 +29,13 @@ class StaticDrag extends StaticBaseTask<{
 	protected init(contents: { categories: CategoryItems[]; statements: StatementItems[] }): void {
 		this.categories = contents.categories
 		this.statements = contents.statements
+	}
+
+	protected getContents(): StaticDragContent {
+		return {
+			categories: this.categories,
+			statements: this.statements,
+		};
 	}
 }
 

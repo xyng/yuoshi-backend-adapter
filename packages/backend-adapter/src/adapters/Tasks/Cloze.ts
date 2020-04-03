@@ -4,7 +4,7 @@ import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
-class StaticCloze extends StaticBaseTask<ClozeContent[]> {
+export class StaticCloze extends StaticBaseTask<ClozeContent[]> {
 	readonly type: string = "cloze"
 	readonly isTraining: boolean = false
 
@@ -12,6 +12,10 @@ class StaticCloze extends StaticBaseTask<ClozeContent[]> {
 
 	protected init(contents: ClozeContent[]): void {
 		this.contents = contents
+	}
+
+	protected getContents(): ClozeContent[] {
+		return this.contents;
 	}
 }
 

@@ -1,9 +1,9 @@
-import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
+import { AsyncBaseTask, BaseTaskConstructData, StaticBaseTask } from "./BaseTask"
 import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
-class StaticCard extends StaticBaseTask<string> {
+export class StaticCard extends StaticBaseTask<string> {
 	readonly isTraining: boolean = false
 	readonly type: string = "card"
 
@@ -11,6 +11,10 @@ class StaticCard extends StaticBaseTask<string> {
 
 	protected init(contents: string): void {
 		this.topic = contents
+	}
+
+	protected getContents(): string {
+		return this.topic;
 	}
 }
 
