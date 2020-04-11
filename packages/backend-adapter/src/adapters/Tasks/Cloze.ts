@@ -3,6 +3,7 @@ import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
+import parseContent from "../../helpers/parseContent"
 
 export class StaticCloze extends StaticBaseTask<ClozeContent[]> {
 	readonly type: string = "cloze"
@@ -67,19 +68,13 @@ class ClozeContent {
 	) {}
 
 	public getContentParts(): {
-		inputId: string,
+		inputId?: string,
 		content: string
 	}[] {
-		// TODO: map the gaps to quests?
-
-		const inputRegex = new RegExp(/W*##(\d)##W*/, "gm")
-		const matches = this.content.match(inputRegex)
-		const parts = this.content.split(inputRegex)
-
-		return matches.map((match, index) => {
+		return parseContent(this.content, "##").map(match => {
 			return {
-				inputId: match,
-				content: parts[index]
+				inputId: match.id,
+				content: match.content
 			}
 		})
 	}

@@ -31,6 +31,7 @@ export { NSUserTaskSolution } from "./adapters/AbstractUserTaskSolutionAdapter"
 
 // Helpers
 export { default as AsyncIterableWrapper } from "./helpers/AsyncIterableWrapper"
+export { default as parseContent } from "./helpers/parseContent"
 
 // Tasks
 export * from "./adapters/Tasks/Survey"
