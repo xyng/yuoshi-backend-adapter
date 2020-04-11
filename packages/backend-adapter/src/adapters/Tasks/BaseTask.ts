@@ -61,6 +61,7 @@ export abstract class StaticBaseTask<T> extends BaseTask<T> {
 
 interface BaseAnswer {
 	quest_id: string
+	sort?: number
 	answer_id?: string
 	custom?: string
 }
@@ -97,6 +98,7 @@ export abstract class AsyncBaseTask<T> extends BaseTask<AsyncIterableWrapper<Tas
 
 			if (answer.custom) {
 				contents[answer.content_id].push({
+					sort: answer.sort,
 					quest_id: answer.quest_id,
 					custom: answer.custom,
 				})
@@ -105,6 +107,7 @@ export abstract class AsyncBaseTask<T> extends BaseTask<AsyncIterableWrapper<Tas
 			}
 
 			contents[answer.content_id].push({
+				sort: answer.sort,
 				quest_id: answer.quest_id,
 				answer_id: answer.answer_id,
 			})

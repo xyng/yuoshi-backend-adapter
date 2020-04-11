@@ -173,4 +173,55 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 
 		return data
 	}
+
+	async saveCompleteTask(task_id: string, solution: NSUserTaskSolution.UserTaskSolutionModel) {
+		if (!solution.contents) {
+			return
+		}
+
+		const quest_solutions = []
+
+		// save contents concurrently but every quests for every content sequentially (see below for reason)
+		const content_solutions = solution.contents.map(async (content) => {
+			let content_solution: ReturnType<UserTaskSolutionAdapter<RequestBackendConfigType>['saveContentSolution']>
+			if (content.value) {
+				let value: object
+
+				if (typeof content.value === "string") {
+					value = {
+						value: content.value
+					}
+				} else {
+					value = content.value
+				}
+
+				try {
+					content_solution = this.saveContentSolution(content.content_id, value)
+				} catch (ignore) {}
+			}
+
+			const answersByQuest = (content.answers || []).reduce<{
+				[key: string]: Answer[]
+			}>((acc, value) => {
+				acc[value.quest_id] = acc[value.quest_id] || []
+				acc[value.quest_id].push(value)
+
+				return acc
+			}, {})
+
+			for (const key in answersByQuest) {
+				// make quest saves sequential.
+				// the server may have hiccups (eg. create two content solutions for one content)
+				// if we save concurrently
+				quest_solutions.push(await this.saveQuestSolution(key, answersByQuest[key]))
+			}
+
+			return content_solution
+		})
+
+		return {
+			content_solutions: await Promise.all(content_solutions),
+			quest_solutions: quest_solutions,
+		}
+	}
 }

@@ -2,6 +2,8 @@ import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerI
 import { DefaultEntity, DefaultYuoshiAdapter } from "./DefaultYuoshiAdapter"
 import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper"
 
+type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
+
 interface UserTaskContentQuestSolution extends DefaultEntity<never> {
 	content_solution_id: string
 	quest_id: string
@@ -44,12 +46,12 @@ export namespace NSUserTaskSolution {
 
 	interface BaseContent {
 		content_id: string
-		value?: string
+		value?: string | object
 		answers?: Answer[]
 	}
 
 	interface ContentWithValue extends BaseContent {
-		value: string
+		value: string | object
 		answers?: never
 	}
 
@@ -71,6 +73,11 @@ export namespace NSUserTaskSolution {
 			current_content?: string
 			current_quest?: string
 		}>
+
+		public abstract saveCompleteTask(task_id: string, solution: UserTaskSolutionModel): Promise<{
+			content_solutions: ThenArg<ReturnType<AbstractUserTaskSolutionAdapter<RequestConfigType, AuthenticationHandler>['saveContentSolution']>>[]
+			quest_solutions: ThenArg<ReturnType<AbstractUserTaskSolutionAdapter<RequestConfigType, AuthenticationHandler>['saveQuestSolution']>>[]
+		} | undefined>
 
 		public abstract saveContentSolution(content_id: string, value: object): Promise<{
 			id: string,

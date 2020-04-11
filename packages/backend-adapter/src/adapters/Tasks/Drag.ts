@@ -1,17 +1,17 @@
 import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
-import { NSTaskContentQuestAdapter } from "../AbstractTaskContentQuestAdapter"
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
 interface CategoryItems {
-	id: string,
+	id: string
+	content_id: string
 	title: string
 }
 
 interface StatementItems {
-	id: string,
+	id: string
 	text: string
 }
 
@@ -99,7 +99,7 @@ export class Drag extends AsyncBaseTask<StaticDrag> {
 			.reduce((acc, item) => {
 				item.items.forEach((answer, index) => {
 					acc.push({
-						sequence: index,
+						sort: index,
 						content_id: item.content_id,
 						quest_id: item.category_id,
 						answer_id: answer
