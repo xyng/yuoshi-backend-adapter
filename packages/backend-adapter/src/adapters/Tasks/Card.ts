@@ -3,34 +3,38 @@ import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
-export class StaticCard extends StaticBaseTask<string> {
+type CardContent = {
+	id: string,
+	title: string,
+	content: string
+}
+
+export class StaticCard extends StaticBaseTask<CardContent[]> {
 	readonly isTraining: boolean = false
 	readonly type: string = "card"
 
-	public topic: string
+	public topics: CardContent[]
 
-	protected init(contents: string): void {
-		this.topic = contents
+	protected init(contents: CardContent[]): void {
+		this.topics = contents
 	}
 
-	protected getContents(): string {
-		return this.topic;
+	protected getContents(): CardContent[] {
+		return this.topics;
 	}
 }
 
 export class Card extends AsyncBaseTask<StaticCard> {
 	public readonly isTraining: boolean = false
 	public readonly type: string = "card"
-	public topic: Promise<{
-		topic_id: string,
-		value: string
-	}>
+	public topics: AsyncIterableWrapper<CardContent>
 
 	protected init(contents: AsyncIterableWrapper<NSTaskContentAdapter.TaskContent>): void {
-		this.topic = contents.first().then(content => {
+		this.topics = contents.map(content => {
 			return {
-				topic_id: content.id,
-				value: content.content
+				id: content.id,
+				title: content.title,
+				content: content.content
 			}
 		})
 	}
@@ -38,20 +42,22 @@ export class Card extends AsyncBaseTask<StaticCard> {
 	async getStatic(): Promise<StaticCard> {
 		return new StaticCard({
 			...this,
-			contents: (await this.topic).value
+			contents: await this.topics.toArray()
 		});
 	}
 
-	createAnswer(content: {
-		topic_id: string,
-		content: string,
-	}): NSUserTaskSolution.UserTaskSolutionModel {
+	createAnswer(contents: {
+		topic_id: string
+		value: string
+	}[]): NSUserTaskSolution.UserTaskSolutionModel {
 		return {
 			task_id: this.id,
-			contents: [{
-				content_id: content.topic_id,
-				value: content.content
-			}]
+			contents: contents.map((content) => {
+				return {
+					content_id: content.topic_id,
+					value: content.value
+				}
+			})
 		}
 	}
 }
