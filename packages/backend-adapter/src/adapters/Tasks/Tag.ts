@@ -3,7 +3,7 @@ import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
-import parseContent from "../../helpers/parseContent"
+import { parseContent } from "../../helpers/parseContent"
 
 interface TagContent {
 	id: string
