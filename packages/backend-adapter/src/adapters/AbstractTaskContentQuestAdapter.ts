@@ -12,6 +12,8 @@ export namespace NSTaskContentQuestAdapter {
 		prePhrase?: string
 		content?: string
 		multiple: boolean,
+		require_order: boolean,
+		custom_answer: boolean,
 		answers: AsyncIterableWrapper<NSTaskContentQuestAnswerAdapter.TaskContentQuestAnswer>
 	}
 

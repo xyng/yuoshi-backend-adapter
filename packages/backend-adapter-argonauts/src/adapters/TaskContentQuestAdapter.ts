@@ -20,6 +20,8 @@ export default class TaskContentQuestAdapter<
 				prePhrase: data.attributes.prePhrase as string,
 				content: data.attributes.content as string,
 				multiple: data.attributes.multiple,
+				require_order: data.attributes.require_order,
+				custom_answer: data.attributes.custom_answer,
 				answers: AsyncIterableWrapper.fromAsyncIterable(this.backendAdapter.taskContentQuestAnswerAdapter.getAnswersForQuest(data.id))
 			}
 		});
