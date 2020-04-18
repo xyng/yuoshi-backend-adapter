@@ -19,6 +19,11 @@ export default [
 				sourcemap: true,
 			},
 		],
+		external: [
+			"@xyng/yuoshi-backend-adapter",
+			"querystring",
+			"crypto",
+		],
 		plugins: [
 			typescript({
 				sourcemap: true,

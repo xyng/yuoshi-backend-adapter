@@ -3,6 +3,7 @@ import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerI
 import { NSUserAdapter } from "./AbstractUserAdapter"
 import { AbstractPaginator } from "./AbstractPaginator"
 import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper";
+import { NSPackageAdapter } from "./AbstractPackageAdapter"
 
 export namespace NSCourseAdapter {
 	import User = NSUserAdapter.User
@@ -11,6 +12,7 @@ export namespace NSCourseAdapter {
 		title: string
 		description?: string
 		lecturers: AsyncIterableWrapper<NSUserAdapter.User>
+		packages: AsyncIterableWrapper<NSPackageAdapter.Package>
 	}
 
 	export abstract class AbstractCourseAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {

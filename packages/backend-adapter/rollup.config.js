@@ -7,7 +7,10 @@ import pkg from "./package.json"
 export default [
 	{
 		input: "src/main.ts",
-		external: ["BackendAdapter"],
+		external: [
+			"querystring",
+			"crypto",
+		],
 		output: [
 			{
 				file: pkg.main,

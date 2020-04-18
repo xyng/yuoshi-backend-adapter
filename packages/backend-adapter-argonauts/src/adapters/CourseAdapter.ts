@@ -2,13 +2,11 @@ import {
 	AbstractRequestAdapter,
 	NSCourseAdapter,
 	NSUserAdapter,
-	AsyncIterableWrapper
+	AsyncIterableWrapper, BackendAdapterInterface,
 } from "@xyng/yuoshi-backend-adapter"
 
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 import Paginator from "../Paginator"
-
-import UserAdapter from "./UserAdapter"
 
 import Course = NSCourseAdapter.Course
 import User = NSUserAdapter.User
@@ -20,22 +18,18 @@ type Membership = User<{
 	date: Date
 }>
 
-const getLecturersForCourse = (courseAdapter: CourseAdapter<any>, userAdapter: UserAdapter<any>) => async (course_id: string): Promise<AsyncIterableWrapper<NSUserAdapter.User>> => {
-	const iterator = AsyncIterableWrapper.fromAsyncIterable(courseAdapter.getMemberships(course_id));
-
-	return iterator.filter((item) => {
-		return item.misc.permission === "dozent"
-	})
-}
-
-export const mapCourseData = (courseAdapter: CourseAdapter<any>, userAdapter: UserAdapter<any>) => {
-	const getLecturers = getLecturersForCourse(courseAdapter, userAdapter)
+export const mapCourseData = (backendAdapter: BackendAdapter<any>) => {
 	return async (data: any): Promise<NSCourseAdapter.Course> => {
 		return {
 			id: data.id,
 			title: data.attributes.title,
 			description: data.attributes.description,
-			lecturers: await getLecturers(data.id)
+			lecturers: await backendAdapter.courseAdapter
+				.getMemberships(data.id, "dozent")
+				.getWrapped(),
+			packages: await backendAdapter.packageAdapter
+				.getPackagesForCourse(data.id)
+				.getWrapped()
 		}
 	}
 }
@@ -48,13 +42,23 @@ export default class CourseAdapter<
     		config => {
     			return this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/users/${user_id}/courses`, config)
 			},
-			mapCourseData(this, this.backendAdapter.userAdapter)
+			mapCourseData(this.backendAdapter as BackendAdapter<RequestBackendConfigType>)
 		)
 	}
 
-	getMemberships(course_id: string): Paginator<Membership, RequestBackendConfigType> {
+	getMemberships(course_id: string, permission?: string): Paginator<Membership, RequestBackendConfigType> {
 		return new Paginator<Membership, RequestBackendConfigType>(
     		config => {
+    			if (permission) {
+    				config = this.requestAdapter.mergeConfig(config, {
+						params: {
+							filter: {
+								permission
+							}
+						}
+					})
+				}
+
     			return this.requestAdapter.getAuthorized(
     				`plugins.php/argonautsplugin/courses/${course_id}/memberships`,
 					config

@@ -27,6 +27,19 @@ export { NSTaskAdapter } from "./adapters/AbstractTaskAdapter"
 export { NSTaskContentAdapter } from "./adapters/AbstractTaskContentAdapter"
 export { NSTaskContentQuestAdapter } from "./adapters/AbstractTaskContentQuestAdapter"
 export { NSTaskContentQuestAnswerAdapter } from "./adapters/AbstractTaskContentQuestAnswerAdapter"
+export { NSUserTaskSolution } from "./adapters/AbstractUserTaskSolutionAdapter"
 
 // Helpers
 export { default as AsyncIterableWrapper } from "./helpers/AsyncIterableWrapper"
+export * from "./helpers/parseContent"
+
+// Tasks
+export * from "./adapters/Tasks/Survey"
+export * from "./adapters/Tasks/Multi"
+export * from "./adapters/Tasks/Drag"
+export * from "./adapters/Tasks/Cloze"
+export * from "./adapters/Tasks/Tag"
+export * from "./adapters/Tasks/Memory"
+export * from "./adapters/Tasks/Card"
+export * from "./adapters/Tasks/Training"
+export { default as TaskFactory } from "./adapters/Tasks/TaskFactory"

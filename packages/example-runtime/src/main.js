@@ -2,7 +2,7 @@ const RequestAdapterAxios = require("@xyng/yuoshi-request-adapter-axios")
 
 const { BackendAdapter, StudipOauthAuthenticationHandler } = require("@xyng/yuoshi-backend-adapter-argonauts")
 
-const { RequestError } = require("@xyng/yuoshi-backend-adapter")
+const { AsyncIterableWrapper, RequestError } = require("@xyng/yuoshi-backend-adapter")
 
 const readline = require("readline")
 
@@ -14,7 +14,7 @@ function askQuestion(query) {
         output: process.stdout,
     });
 
-    return new Promise(resolve => rl.question(query, ans => {
+    return new Promise(resolve => rl.question(query + "\n", ans => {
         rl.close();
         resolve(ans);
     }))
@@ -45,7 +45,7 @@ async function logRequest(respPromise) {
 	console.log(resp)
 }
 
-const base = "http://localhost:8123"
+const base = "http://localhost:8092"
 
 ;(async () => {
 	let auth_tokens = secrets.users.test_autor
@@ -123,29 +123,57 @@ const base = "http://localhost:8123"
 	// const data = await makeRequest(backendAdapter.courseAdapter.getCourses("e7a0a84b161f3e8c09b4a0a2e8a58147"))
 	// const data = await makeRequest(backendAdapter.courseAdapter.getCourses("76ed43ef286fb55cf9e41beadb484a9f"))
 
+	console.log("Lade Packages. Einen Moment bitte ...")
 	const packages = argonautsAdapter.packageAdapter.getPackagesForCourse("a07535cf2f8a72df33c12ddfa4b53dde")
+
 	try {
-		for await (let packageItem of packages) {
-			console.log(packageItem)
+		const packageArray = await AsyncIterableWrapper.fromAsyncIterable(packages).toArray()
 
-			for await (let task of packageItem.tasks) {
-				console.log(task)
+		const packageString = packageArray.reduce((acc, item, index) => {
+			return acc + `${ index }) ${ item.title }`
+		}, "\n")
 
-				for await (let content of task.contents) {
-					console.log(content)
+		const packageId = await askQuestion("Welches Package möchtest du spielem?" + packageString)
 
-					for await (let quest of content.quests) {
-						console.log(quest)
+		const packageItem = packageArray[packageId]
 
-						for await (let answer of quest.answers) {
-							console.log(answer)
-						}
-					}
+		while (true) {
+			console.log("Lade nächsten Task. Einen Moment bitte ...")
+			const task = await argonautsAdapter.taskAdapter.getNextTask(packageItem.id)
+			if (!task) {
+				console.log("Keine weiteren Tasks. Du bist fertig!")
+				break
+			}
+
+			console.log(task.type)
+
+			if (task.type === "multi") {
+				const staticTask = await task.getStatic()
+				const answers = []
+
+				for (const content of staticTask.contents) {
+					console.log("Frage: " + content.question)
+
+					const answerString = content.answers.reduce((acc, item, index) => {
+						return acc + `${ index }) ${ item.content }`
+					}, "\n")
+
+					const answer = await askQuestion("Welche Antwort ist korrekt?" + answerString)
+
+					answers.push({
+						content_id: content.content_id,
+						quest_id: content.id,
+						answer_id: content.answers[parseInt(answer)].id
+					})
 				}
+
+				const solution = task.createAnswer(answers)
+
+				await argonautsAdapter.userTaskSolutionAdapter.saveSolution(solution)
 			}
 		}
 	} catch (e) {
-		console.log(e)
+		console.log(e.response.data)
 		debugger
 	}
 })()

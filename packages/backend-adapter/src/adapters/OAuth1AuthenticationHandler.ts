@@ -1,11 +1,14 @@
 import * as qs from "querystring"
 
-// @ts-ignore
-import OAuth from "oauth-1.0a"
+import type * as OAuthType from "oauth-1.0a"
+
+import { createHmac } from "crypto"
 
 import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerInterface"
 import { RequestAdapterConfiguration } from "../interfaces/RequestAdapterInterface"
 import { AbstractRequestAdapter } from "./AbstractRequestAdapter"
+
+const OAuth = require("oauth-1.0a")
 
 interface Credentials {
 	key: string
@@ -30,32 +33,58 @@ interface OAuthUserConfig {
 }
 
 export class OAuth1AuthenticationHandler implements AuthenticationHandlerInterface {
-	private oauth: OAuth
+	private oauth: OAuthType
 	constructor(
 		protected config: OAuthAppConfig,
-		protected getUserConfig: () => OAuthUserConfig
+		protected getUserConfig: () => OAuthUserConfig,
+		oauthConfig: {
+			signature_method: "PLAINTEXT" | "HMAC-SHA1"
+			hash_function: (base_string: string, key: string) => string
+		},
 	) {
 		this.oauth = new OAuth({
 			consumer: {
 				key: config.consumer.key,
 				secret: config.consumer.secret,
 			},
+			signature_method: "HMAC-SHA1",
+			hash_function: (base_string, key) => {
+				return createHmac('sha1', key)
+					.update(base_string)
+					.digest('base64')
+			},
+			...oauthConfig,
 		})
 	}
 
-	getAuthenticationForRequest(
+	getAuthenticationForRequest<T>(
 		method: string,
 		action: string,
+		config: RequestAdapterConfiguration<T>,
 		data?: any
 	): {
 		data?: any;
-		config?: RequestAdapterConfiguration<never>
+		config?: RequestAdapterConfiguration<T>
 	} {
 		const userAuthInfo = this.getUserConfig()
 
+		let paramString: string;
+
+		const { params } = config
+		if (params instanceof URLSearchParams) {
+			paramString = params.toString()
+		} else if (typeof params === "object") {
+			paramString = Object.entries(params).reduce((acc, [ param, value ]) => {
+				const pair = `${param}=${value}`
+				return acc + (acc.length ? "&" : "") + pair
+			}, "")
+		}
+
+		paramString = paramString ? `?${paramString}` : ""
+
 		const { Authorization } = this.oauth.toHeader(
 			this.oauth.authorize({
-				url: action,
+				url: `${action}${paramString}`,
 				method,
 				data,
 			}, userAuthInfo)

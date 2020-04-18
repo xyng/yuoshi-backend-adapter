@@ -13,7 +13,10 @@ export default class TaskContentAdapter<
 		}, (data): TaskContent => {
 			return {
 				id: data.id,
-				title: data.attributes.title as string,
+				title: data.attributes.title,
+				content: data.attributes.content,
+				intro: data.attributes.intro,
+				outro: data.attributes.outro,
 				quests: AsyncIterableWrapper.fromAsyncIterable(this.backendAdapter.taskContentQuestAdapter.getQuestsForContent(data.id))
 			}
 		});

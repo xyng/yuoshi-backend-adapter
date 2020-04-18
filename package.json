@@ -10,10 +10,12 @@
 		"build": "lerna run build",
 		"dev": "lerna run --parallel dev",
 		"format": "prettier --write packages/**/*.{ts,js,json}",
-		"prepare": "npm run bootstrap && npm run link && npm run build"
+		"prepare": "npm run bootstrap && npm run link && npm run build",
+		"publish": "lerna publish"
 	},
 	"devDependencies": {
-		"lerna": "^3.20.2"
+		"lerna": "^3.20.2",
+		"lerna-update-wizard": "^0.17.7"
 	},
 	"dependencies": {
 		"prettier": "^1.19.1"

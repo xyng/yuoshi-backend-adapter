@@ -1,6 +1,6 @@
 {
 	"name": "@xyng/yuoshi-backend-adapter",
-	"version": "0.0.1",
+	"version": "0.0.2-beta.0",
 	"description": "",
 	"repository": {
 		"type": "git",
@@ -23,6 +23,7 @@
 	"author": "Daniel Melchior",
 	"license": "MIT",
 	"dependencies": {
+		"@types/ejson": "^2.1.2",
 		"oauth-1.0a": "^2.2.6",
 		"qs": "^6.9.1"
 	},
@@ -32,6 +33,6 @@
 		"rollup": "^1.29.0",
 		"rollup-plugin-typescript2": "^0.25.3",
 		"tslib": "^1.10.0",
-		"typescript": "^3.7.2"
+		"typescript": "^3.8.3"
 	}
 }

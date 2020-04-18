@@ -24,9 +24,9 @@ export abstract class AbstractRequestAdapter<T, AuthenticationHandler extends Au
 		protected config: RequestAdapterConfiguration<T> = {}
 	) {}
 
-	mergeConfig(
+	protected _mergeSingleConfig(
 		old: RequestAdapterConfiguration<T>,
-		config?: RequestAdapterConfiguration<T>
+		config?: Partial<RequestAdapterConfiguration<T>>
 	): RequestAdapterConfiguration<T> {
 		if (!config) {
 			return old
@@ -49,6 +49,15 @@ export abstract class AbstractRequestAdapter<T, AuthenticationHandler extends Au
 		}
 	}
 
+	mergeConfig(
+		old: RequestAdapterConfiguration<T>,
+		...configs: Partial<RequestAdapterConfiguration<T>>[]
+	): RequestAdapterConfiguration<T> {
+		return configs.reduce((merged, config) => {
+			return this._mergeSingleConfig(merged, config)
+		}, old)
+	}
+
 	setDefaultRequestConfig(config: RequestAdapterConfiguration<T>): void {
 		this.config = this.mergeConfig(this.config, config)
 	}
@@ -63,7 +72,7 @@ export abstract class AbstractRequestAdapter<T, AuthenticationHandler extends Au
 		config?: RequestAdapterConfiguration<T>,
 		data?: any
 	): Promise<RequestResponseType> {
-		config = this.mergeConfig(this.config, config)
+		config = this.mergeConfig(this.config, config, {})
 
 		if (!config.auth) {
 			return this._handleRequest(type, action, data, config)
@@ -78,7 +87,7 @@ export abstract class AbstractRequestAdapter<T, AuthenticationHandler extends Au
 		const {
 			data: authenticatedData,
 			config: authenticatedConfig
-		} = this.authenticationHandler.getAuthenticationForRequest(type, url, data)
+		} = this.authenticationHandler.getAuthenticationForRequest(type, url, config, data)
 
 		config = this.mergeConfig(config, authenticatedConfig)
 

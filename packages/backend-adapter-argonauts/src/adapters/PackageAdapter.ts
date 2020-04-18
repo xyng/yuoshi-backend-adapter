@@ -14,9 +14,13 @@ export default class PackageAdapter<
 			(data) => {
     			return {
     				id: data.id as string,
-					title: data.attributes.title as string,
-					description: data.attributes.description as string | undefined,
-					tasks: AsyncIterableWrapper.fromAsyncIterable(this.backendAdapter.taskAdapter.getTasksForPackage(data.id))
+					title: data.attributes.title,
+					slug: data.attributes.slug,
+					playable: data.attributes.playable,
+					description: data.attributes.description,
+					tasks: this.backendAdapter.taskAdapter
+						.getTasksForPackage(data.id)
+						.getWrapped()
 				}
 			}
 		);
