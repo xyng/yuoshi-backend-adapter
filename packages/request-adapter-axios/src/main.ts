@@ -6,8 +6,7 @@ import {
 	RequestResponseType, AbstractRequestAdapter, AuthenticationHandlerInterface,
 } from "@xyng/yuoshi-backend-adapter"
 
-// @ts-ignore
-import URLSearchParams from "@ungap/url-search-params"
+import URLSearchParams from "@ungap/url-search-params/cjs"
 
 type ConfigType = RequestAdapterConfiguration<AxiosRequestConfig>
 
