@@ -6,10 +6,11 @@ export default interface AuthenticationHandlerInterface {
 	 *
 	 * @param method
 	 * @param action
+	 * @param config
 	 * @param data
 	 */
-	getAuthenticationForRequest(method: string, action: string, data?: any): {
+	getAuthenticationForRequest<T>(method: string, action: string, config: RequestAdapterConfiguration<T>, data?: any): {
 		data?: any
-		config?: RequestAdapterConfiguration<never>
+		config?: RequestAdapterConfiguration<T>
 	}
 }

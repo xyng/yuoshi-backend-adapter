@@ -1,4 +1,3 @@
-import { RequestAdapterInterface } from "../interfaces/RequestAdapterInterface"
 import { DefaultEntity, DefaultYuoshiAdapter } from "./DefaultYuoshiAdapter"
 import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerInterface"
 

@@ -9,7 +9,10 @@ export default [
 	{
 		input: "src/main.ts",
 		external: [
+			"@xyng/yuoshi-backend-adapter",
 			"axios",
+			"crypto",
+			"querystring",
 		],
 		output: [
 			{
