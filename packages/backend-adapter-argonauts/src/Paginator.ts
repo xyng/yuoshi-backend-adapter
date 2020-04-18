@@ -14,10 +14,10 @@ export default class Paginator<T, Config> extends AbstractPaginator<T, Config> {
 
 	async paginate(page: number = 1, perPage: number = this.currentInfo.perPage): Promise<PaginationData<T>> {
 		const { data } = await this.makeRequest({
-			// params: {
-			// 	"page[offset]": page * perPage,
-			// 	"page[limit]": perPage,
-			// }
+			params: {
+				"page[offset]": page * perPage,
+				"page[limit]": perPage,
+			}
 		})
 
 		return {
