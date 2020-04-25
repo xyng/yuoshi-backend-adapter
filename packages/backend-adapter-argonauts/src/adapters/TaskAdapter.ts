@@ -3,13 +3,13 @@ import { AsyncIterableWrapper, NSTaskAdapter } from "@xyng/yuoshi-backend-adapte
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 import Paginator from "../Paginator"
 
-type TaskTypeMap = ReturnType<TaskAdapter<any>['mapTaskToType']>
+import DefaultBaseTaskConstructDataWithType = NSTaskAdapter.DefaultBaseTaskConstructDataWithType
 
 export default class TaskAdapter<
 	RequestBackendConfigType
 > extends NSTaskAdapter.AbstractTaskAdapter<RequestBackendConfigType, StudipOauthAuthenticationHandler> {
-	getTasksForPackage(package_id: string, sequence?: number): Paginator<TaskTypeMap, any> {
-		return new Paginator<TaskTypeMap, any>((config) => {
+	_getTasksForPackage(package_id: string, sequence?: number): Paginator<DefaultBaseTaskConstructDataWithType, any> {
+		return new Paginator<DefaultBaseTaskConstructDataWithType, RequestBackendConfigType>((config) => {
 			config = this.requestAdapter.mergeConfig(config, {
 				params: {
 					"filter[sequence]": sequence
@@ -18,8 +18,9 @@ export default class TaskAdapter<
 
 			return this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/packages/${package_id}/tasks`, config)
 		}, (data) => {
-			const task = {
+			return {
 				id: data.id,
+				type: data.attributes.kind,
 				title: data.attributes.title,
 				description: data.attributes.description,
 				image: data.attributes.image,
@@ -28,20 +29,19 @@ export default class TaskAdapter<
 					this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
 				)
 			}
-
-			return this.mapTaskToType(task, data.attributes.kind)
 		});
 	}
 
-	async getNextTask(package_id: string): Promise<TaskTypeMap|undefined> {
+	async _getNextTask(package_id: string): Promise<DefaultBaseTaskConstructDataWithType|undefined> {
 		const { data: { data } } = await this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/packages/${package_id}/nextTask`)
 
 		if (!data) {
 			return undefined;
 		}
 
-		return this.mapTaskToType({
+		return {
 			id: data.id,
+			type: data.attributes.kind,
 			title: data.attributes.title,
 			description: data.attributes.description,
 			image: data.attributes.image,
@@ -49,18 +49,19 @@ export default class TaskAdapter<
 			contents: AsyncIterableWrapper.fromAsyncIterable(
 				this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
 			)
-		}, data.attributes.kind)
+		}
     }
 
-    async getTask(task_id: string): Promise<TaskTypeMap|undefined> {
+    async _getTask(task_id: string): Promise<DefaultBaseTaskConstructDataWithType|undefined> {
 		const { data: { data } } = await this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/tasks/${task_id}`)
 
 		if (!data) {
 			return undefined;
 		}
 
-		return this.mapTaskToType({
+		return {
 			id: data.id,
+			type: data.attributes.kind,
 			title: data.attributes.title,
 			description: data.attributes.description,
 			image: data.attributes.image,
@@ -68,6 +69,6 @@ export default class TaskAdapter<
 			contents: AsyncIterableWrapper.fromAsyncIterable(
 				this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
 			)
-		}, data.attributes.kind)
+		}
 	}
 }

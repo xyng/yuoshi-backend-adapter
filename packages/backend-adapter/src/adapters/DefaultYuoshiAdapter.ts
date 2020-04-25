@@ -7,9 +7,18 @@ export interface DefaultEntity<T = any> {
 	misc?: T
 }
 
-export class DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> {
+export class DefaultYuoshiAdapter<
+	RequestConfigType,
+	AuthenticationHandler extends AuthenticationHandlerInterface
+> {
 	constructor(
-		protected readonly requestAdapter: AbstractRequestAdapter<RequestConfigType, AuthenticationHandler>,
-		protected readonly backendAdapter: BackendAdapterInterface<RequestConfigType, AuthenticationHandler>
+		protected readonly requestAdapter: AbstractRequestAdapter<
+			RequestConfigType,
+			AuthenticationHandler
+		>,
+		protected readonly backendAdapter: BackendAdapterInterface<
+			RequestConfigType,
+			AuthenticationHandler
+		>
 	) {}
 }

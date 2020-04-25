@@ -9,8 +9,8 @@ export default interface AuthenticationHandlerInterface {
 	 * @param config
 	 * @param data
 	 */
-	getAuthenticationForRequest<T>(method: string, action: string, config: RequestAdapterConfiguration<T>, data?: any): {
-		data?: any
-		config?: RequestAdapterConfiguration<T>
+	getAuthenticationForRequest<Config, Data, ExtendedData extends Data>(method: string, action: string, config: RequestAdapterConfiguration<Config>, data?: Data): {
+		data?: ExtendedData,
+		config?: RequestAdapterConfiguration<Config>
 	}
 }

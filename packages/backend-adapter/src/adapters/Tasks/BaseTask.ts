@@ -82,9 +82,9 @@ type AnswerInput = Answer & {
 	content_id: string
 }
 
-export abstract class AsyncBaseTask<T> extends BaseTask<AsyncIterableWrapper<TaskContent>> {
+export abstract class AsyncBaseTask<T, AnswerInputType> extends BaseTask<AsyncIterableWrapper<TaskContent>> {
 	public abstract getStatic(): Promise<T>;
-	public abstract createAnswer(answer: any): UserTaskSolutionModel
+	public abstract createAnswer(answer: AnswerInputType): UserTaskSolutionModel
 
 	protected createSolutionFromContentAnswers(
 		answers: AnswerInput[]
