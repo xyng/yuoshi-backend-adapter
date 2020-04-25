@@ -8,6 +8,12 @@ import TaskContentQuest = NSTaskContentQuestAdapter.TaskContentQuest
 import { NSTaskContentQuestAnswerAdapter } from "../AbstractTaskContentQuestAnswerAdapter"
 import TaskContentQuestAnswer = NSTaskContentQuestAnswerAdapter.TaskContentQuestAnswer
 
+type QuestAnswerInput = {
+	content_id: string
+	quest_id: string
+	answer_id: string
+}[]
+
 export interface Quest extends Omit<TaskContentQuest, "answers"> {
 	content_id: string
 	answers: TaskContentQuestAnswer[]
@@ -25,7 +31,7 @@ export abstract class QuestionBasedStaticTask extends StaticBaseTask<Quest[]> {
 	}
 }
 
-export abstract class QuestionBasedTask<T extends QuestionBasedStaticTask> extends AsyncBaseTask<T> {
+export abstract class QuestionBasedTask<T extends QuestionBasedStaticTask> extends AsyncBaseTask<T, QuestAnswerInput> {
 	public contents: AsyncIterableWrapper<TaskContentQuest & { content_id: string }>
 
 	protected init(contents: AsyncIterableWrapper<NSTaskContentAdapter.TaskContent>): void {
@@ -56,11 +62,7 @@ export abstract class QuestionBasedTask<T extends QuestionBasedStaticTask> exten
 	}
 
 	createAnswer(
-		answers: {
-			content_id: string
-			quest_id: string
-			answer_id: string
-		}[]
+		answers: QuestAnswerInput
 	): NSUserTaskSolution.UserTaskSolutionModel {
 		return this.createSolutionFromContentAnswers(answers)
 	}

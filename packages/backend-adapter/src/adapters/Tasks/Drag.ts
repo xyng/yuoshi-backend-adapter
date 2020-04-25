@@ -4,6 +4,12 @@ import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
+type DragAnswerInput = {
+	category_id: string,
+	content_id: string,
+	items: string[]
+}[]
+
 interface CategoryItems {
 	id: string
 	content_id: string
@@ -19,6 +25,7 @@ type StaticDragContent = {
 	categories: CategoryItems[]
 	statements: StatementItems[]
 }
+
 export class StaticDrag extends StaticBaseTask<StaticDragContent> {
 	readonly isTraining: boolean = false
 	readonly type: string = "drag"
@@ -39,7 +46,7 @@ export class StaticDrag extends StaticBaseTask<StaticDragContent> {
 	}
 }
 
-export class Drag extends AsyncBaseTask<StaticDrag> {
+export class Drag extends AsyncBaseTask<StaticDrag, DragAnswerInput> {
 	public readonly type: string = "drag"
 	public readonly isTraining: boolean = false
 	public categories: AsyncIterableWrapper<CategoryItems>
@@ -90,11 +97,7 @@ export class Drag extends AsyncBaseTask<StaticDrag> {
 		});
 	}
 
-	createAnswer(answers: {
-		category_id: string,
-		content_id: string,
-		items: string[]
-	}[]): NSUserTaskSolution.UserTaskSolutionModel {
+	createAnswer(answers: DragAnswerInput): NSUserTaskSolution.UserTaskSolutionModel {
 		return this.createSolutionFromContentAnswers(answers
 			.reduce((acc, item) => {
 				item.items.forEach((answer, index) => {

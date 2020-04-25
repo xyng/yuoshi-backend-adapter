@@ -17,6 +17,8 @@ interface ContentType {
 	content: string
 }
 
+type TagAnswerInput = TagContent[]
+
 export class StaticTag extends StaticBaseTask<{
 	tags: TagContent[],
 	contents: ContentType[]
@@ -45,7 +47,7 @@ export class StaticTag extends StaticBaseTask<{
 	}
 }
 
-export class Tag extends AsyncBaseTask<StaticTag> {
+export class Tag extends AsyncBaseTask<StaticTag, TagAnswerInput> {
 	public readonly type: string = "tag"
 	public readonly isTraining: boolean = false
 	public tags: AsyncIterableWrapper<TagContent>
@@ -93,7 +95,7 @@ export class Tag extends AsyncBaseTask<StaticTag> {
 		});
 	}
 
-	createAnswer(answers: TagContent[]): NSUserTaskSolution.UserTaskSolutionModel {
+	createAnswer(answers: TagAnswerInput): NSUserTaskSolution.UserTaskSolutionModel {
 		return this.createSolutionFromContentAnswers(answers.map((answer) => {
 			return {
 				content_id: answer.content_id,

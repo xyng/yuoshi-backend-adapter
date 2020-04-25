@@ -9,6 +9,14 @@ import { NSTaskContentQuestAnswerAdapter } from "../AbstractTaskContentQuestAnsw
 import TaskContentQuestAnswer = NSTaskContentQuestAnswerAdapter.TaskContentQuestAnswer
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
+type TrainingAnswerInput = {
+	content_id: string
+	answers: {
+		quest_id: string
+		answer_id: string
+	}[]
+}[]
+
 interface Content extends Omit<TaskContent, "quests"> {
 	quests: Quest[]
 }
@@ -31,7 +39,7 @@ export class StaticTraining extends StaticBaseTask<Content[]> {
 	}
 }
 
-export class Training extends AsyncBaseTask<StaticTraining> {
+export class Training extends AsyncBaseTask<StaticTraining, TrainingAnswerInput> {
 	public readonly type: string = "training"
 	public readonly isTraining: boolean = true
 	public contents: AsyncIterableWrapper<TaskContent>
@@ -54,13 +62,7 @@ export class Training extends AsyncBaseTask<StaticTraining> {
 	}
 
 	createAnswer(
-		contents: {
-			content_id: string
-			answers: {
-				quest_id: string
-				answer_id: string
-			}[]
-		}[]
+		contents: TrainingAnswerInput
 	): NSUserTaskSolution.UserTaskSolutionModel {
 		return {
 			task_id: this.id,

@@ -4,6 +4,19 @@ import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 
+type MemoryAnswerInput = {
+	a: {
+		id: string,
+		content_id: string,
+		category_id: string
+	},
+	b: {
+		id: string,
+		content_id: string,
+		category_id: string
+	}
+}[]
+
 class MemoryItem {
 	constructor(
 		public readonly id: string,
@@ -33,7 +46,7 @@ export class StaticMemory extends StaticBaseTask<MemoryItem[]> {
 	}
 }
 
-export class Memory extends AsyncBaseTask<StaticMemory> {
+export class Memory extends AsyncBaseTask<StaticMemory, MemoryAnswerInput> {
 	public readonly type: string = "memory"
 	public readonly isTraining: boolean = false
 	public items: AsyncIterableWrapper<MemoryItem>
@@ -63,18 +76,7 @@ export class Memory extends AsyncBaseTask<StaticMemory> {
 	}
 
 	createAnswer(
-		pairs: {
-			a: {
-				id: string,
-				content_id: string,
-				category_id: string
-			},
-			b: {
-				id: string,
-				content_id: string,
-				category_id: string
-			}
-		}[]
+		pairs: MemoryAnswerInput
 	): NSUserTaskSolution.UserTaskSolutionModel {
 		return this.createSolutionFromContentAnswers(pairs
 			.reduce((current, { a, b }) => {

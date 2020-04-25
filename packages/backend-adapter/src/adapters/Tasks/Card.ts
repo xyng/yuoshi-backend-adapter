@@ -9,6 +9,11 @@ type CardContent = {
 	content: string
 }
 
+type CardAnswerInput = {
+	topic_id: string
+	value: string
+}[]
+
 export class StaticCard extends StaticBaseTask<CardContent[]> {
 	readonly isTraining: boolean = false
 	readonly type: string = "card"
@@ -24,17 +29,17 @@ export class StaticCard extends StaticBaseTask<CardContent[]> {
 	}
 }
 
-export class Card extends AsyncBaseTask<StaticCard> {
+export class Card extends AsyncBaseTask<StaticCard, CardAnswerInput> {
 	public readonly isTraining: boolean = false
 	public readonly type: string = "card"
 	public topics: AsyncIterableWrapper<CardContent>
 
 	protected init(contents: AsyncIterableWrapper<NSTaskContentAdapter.TaskContent>): void {
-		this.topics = contents.map(content => {
+		this.topics = contents.map((content) => {
 			return {
 				id: content.id,
 				title: content.title,
-				content: content.content
+				content: content.content,
 			}
 		})
 	}
@@ -46,10 +51,7 @@ export class Card extends AsyncBaseTask<StaticCard> {
 		});
 	}
 
-	createAnswer(contents: {
-		topic_id: string
-		value: string
-	}[]): NSUserTaskSolution.UserTaskSolutionModel {
+	createAnswer(contents: CardAnswerInput): NSUserTaskSolution.UserTaskSolutionModel {
 		return {
 			task_id: this.id,
 			contents: contents.map((content) => {

@@ -20,7 +20,6 @@ export default class PackageAdapter<
 					description: data.attributes.description,
 					tasks: this.backendAdapter.taskAdapter
 						.getTasksForPackage(data.id)
-						.getWrapped()
 				}
 			}
 		);

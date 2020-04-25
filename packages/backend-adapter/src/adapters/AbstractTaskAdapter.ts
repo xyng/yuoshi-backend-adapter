@@ -4,15 +4,8 @@ import { AbstractPaginator } from "./AbstractPaginator"
 
 import { DefaultBaseTaskConstructData } from "./Tasks/BaseTask"
 
-import { Survey } from "./Tasks/Survey"
-import { Multi } from "./Tasks/Multi"
-import { Drag } from "./Tasks/Drag"
-import { Cloze } from "./Tasks/Cloze"
-import { Tag } from "./Tasks/Tag"
-import { Memory } from "./Tasks/Memory"
-import { Card } from "./Tasks/Card"
-import { Training } from "./Tasks/Training"
 import TaskFactory from "./Tasks/TaskFactory"
+import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper"
 
 export namespace NSTaskAdapter {
 	export interface Task<T = any> extends DefaultEntity<T> {
@@ -37,13 +30,43 @@ export namespace NSTaskAdapter {
 
 	type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>['mapTaskToType']>
 
+	export type DefaultBaseTaskConstructDataWithType = DefaultBaseTaskConstructData & {
+		type: TaskTypeName
+	}
+
 	export abstract class AbstractTaskAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
 		protected mapTaskToType(task: DefaultBaseTaskConstructData, type: TaskTypeName) {
 			return TaskFactory.getTask(type, task)
 		}
 
-		abstract getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<TaskTypeMap, any>
-		abstract getNextTask(package_id: string): Promise<TaskTypeMap|undefined>
-		abstract getTask(task_id: string): Promise<TaskTypeMap|undefined>
+		async getNextTask(package_id: string): Promise<TaskTypeMap|undefined> {
+			const data = await this._getNextTask(package_id)
+			if (!data) {
+				return
+			}
+
+			return this.mapTaskToType(data, data.type)
+		}
+
+		async getTask(task_id: string): Promise<TaskTypeMap|undefined> {
+			const data = await this._getTask(task_id)
+			if (!data) {
+				return
+			}
+
+			return this.mapTaskToType(data, data.type)
+		}
+
+		getTasksForPackage(package_id: string, sequence?: number): AsyncIterableWrapper<TaskTypeMap> {
+			return this._getTasksForPackage(package_id, sequence)
+				.getWrapped()
+				.map((item) => {
+					return this.mapTaskToType(item, item.type)
+				})
+		}
+
+		abstract _getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<DefaultBaseTaskConstructDataWithType, any>
+		protected abstract _getNextTask(package_id: string): Promise<DefaultBaseTaskConstructDataWithType|undefined>
+		protected abstract _getTask(task_id: string): Promise<DefaultBaseTaskConstructDataWithType|undefined>
 	}
 }

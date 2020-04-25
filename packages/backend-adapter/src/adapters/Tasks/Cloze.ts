@@ -5,6 +5,11 @@ import { AsyncBaseTask, StaticBaseTask } from "./BaseTask"
 import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 import { matchImage, matchInput, parseContentMultiple } from "../../helpers/parseContent"
 
+type ClozeAnswerInput = {
+	id: string,
+	inputs: Map<InputID, string>
+}[]
+
 export class StaticCloze extends StaticBaseTask<StaticClozeContent[]> {
 	readonly type: string = "cloze"
 	readonly isTraining: boolean = false
@@ -20,7 +25,7 @@ export class StaticCloze extends StaticBaseTask<StaticClozeContent[]> {
 	}
 }
 
-export class Cloze extends AsyncBaseTask<StaticCloze> {
+export class Cloze extends AsyncBaseTask<StaticCloze, ClozeAnswerInput> {
 	public readonly type: string = "cloze"
 	public readonly isTraining: boolean = false
 	public contents: AsyncIterableWrapper<ClozeContent>
@@ -47,10 +52,7 @@ export class Cloze extends AsyncBaseTask<StaticCloze> {
 		});
 	}
 
-	createAnswer(clozes: {
-		id: string,
-		inputs: Map<InputID, string>
-	}[]): NSUserTaskSolution.UserTaskSolutionModel {
+	createAnswer(clozes: ClozeAnswerInput): NSUserTaskSolution.UserTaskSolutionModel {
 		return {
 			task_id: this.id,
 			contents: clozes.map((cloze) => {
