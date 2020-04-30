@@ -42,12 +42,12 @@ export namespace NSUserTaskSolution {
 		answer_id?: never
 	}
 
-	export type Answer = NormalAnswer | CustomAnswer
+	export type QuestSolution = NormalAnswer | CustomAnswer
 
 	interface BaseContent {
 		content_id: string
 		value?: string | object
-		answers?: Answer[]
+		answers?: QuestSolution[]
 	}
 
 	interface ContentWithValue extends BaseContent {
@@ -56,15 +56,15 @@ export namespace NSUserTaskSolution {
 	}
 
 	interface ContentWithAnswers extends BaseContent {
-		answers: Answer[]
+		answers: QuestSolution[]
 		value?: never
 	}
 
-	export type Content = ContentWithAnswers | ContentWithValue
+	export type ContentSolution = ContentWithAnswers | ContentWithValue | Required<BaseContent>
 
 	export interface UserTaskSolutionModel {
 		task_id: string
-		contents?: Content[]
+		contents?: ContentSolution[]
 	}
 
 	export abstract class AbstractUserTaskSolutionAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
@@ -84,7 +84,7 @@ export namespace NSUserTaskSolution {
 			value: string
 		} | undefined>
 
-		public abstract saveQuestSolution(quest_id: string, answers: Answer[]): Promise<{
+		public abstract saveQuestSolution(quest_id: string, answers: QuestSolution[]): Promise<{
 			id: string,
 			is_correct: boolean
 			score: number

@@ -1,7 +1,7 @@
 import { NSUserTaskSolution } from "@xyng/yuoshi-backend-adapter"
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 import AbstractUserTaskSolutionAdapter = NSUserTaskSolution.AbstractUserTaskSolutionAdapter
-import Answer = NSUserTaskSolution.Answer
+import QuestSolution = NSUserTaskSolution.QuestSolution
 
 export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractUserTaskSolutionAdapter<RequestBackendConfigType, StudipOauthAuthenticationHandler> {
 	async getCurrentTaskPosition(task_id: string, solution_id?: string): Promise<{
@@ -99,7 +99,7 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 		}
 	}
 
-	async saveQuestSolution(quest_id: string, answers: Answer[]): Promise<{
+	async saveQuestSolution(quest_id: string, answers: QuestSolution[]): Promise<{
 		id: string,
 		is_correct: boolean
 		score: number
@@ -201,7 +201,7 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 			}
 
 			const answersByQuest = (content.answers || []).reduce<{
-				[key: string]: Answer[]
+				[key: string]: QuestSolution[]
 			}>((acc, value) => {
 				acc[value.quest_id] = acc[value.quest_id] || []
 				acc[value.quest_id].push(value)
