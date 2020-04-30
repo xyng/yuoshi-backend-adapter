@@ -11,7 +11,7 @@ export namespace NSPackageAdapter {
 		slug: string
 		playable: boolean
 		description?: string
-		tasks: AsyncIterableWrapper<NSTaskAdapter.Task>
+		tasks: AsyncIterableWrapper<NSTaskAdapter.TaskTypeMap>
 	}
 
 	export abstract class AbstractPackageAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {

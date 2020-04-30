@@ -3,13 +3,13 @@ import { AsyncIterableWrapper, NSTaskAdapter } from "@xyng/yuoshi-backend-adapte
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 import Paginator from "../Paginator"
 
-import DefaultBaseTaskConstructDataWithType = NSTaskAdapter.DefaultBaseTaskConstructDataWithType
+import ApiTask = NSTaskAdapter.ApiTask
 
 export default class TaskAdapter<
 	RequestBackendConfigType
 > extends NSTaskAdapter.AbstractTaskAdapter<RequestBackendConfigType, StudipOauthAuthenticationHandler> {
-	_getTasksForPackage(package_id: string, sequence?: number): Paginator<DefaultBaseTaskConstructDataWithType, any> {
-		return new Paginator<DefaultBaseTaskConstructDataWithType, RequestBackendConfigType>((config) => {
+	_getTasksForPackage(package_id: string, sequence?: number): Paginator<ApiTask, any> {
+		return new Paginator<ApiTask, RequestBackendConfigType>((config) => {
 			config = this.requestAdapter.mergeConfig(config, {
 				params: {
 					"filter[sequence]": sequence
@@ -32,7 +32,7 @@ export default class TaskAdapter<
 		});
 	}
 
-	async _getNextTask(package_id: string): Promise<DefaultBaseTaskConstructDataWithType|undefined> {
+	async _getNextTask(package_id: string): Promise<ApiTask|undefined> {
 		const { data: { data } } = await this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/packages/${package_id}/nextTask`)
 
 		if (!data) {
@@ -52,7 +52,7 @@ export default class TaskAdapter<
 		}
     }
 
-    async _getTask(task_id: string): Promise<DefaultBaseTaskConstructDataWithType|undefined> {
+    async _getTask(task_id: string): Promise<ApiTask|undefined> {
 		const { data: { data } } = await this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/tasks/${task_id}`)
 
 		if (!data) {

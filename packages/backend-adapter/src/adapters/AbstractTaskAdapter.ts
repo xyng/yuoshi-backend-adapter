@@ -8,15 +8,6 @@ import TaskFactory from "./Tasks/TaskFactory"
 import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper"
 
 export namespace NSTaskAdapter {
-	export interface Task<T = any> extends DefaultEntity<T> {
-		title: string
-		description?: string
-		image?: string
-		type: string
-		isTraining: boolean
-		credits?: number
-	}
-
 	export enum TaskTypeName {
 		SURVEY = "survey",
 		MULTI = "multi",
@@ -28,9 +19,9 @@ export namespace NSTaskAdapter {
 		TRAINING = "training"
 	}
 
-	type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>['mapTaskToType']>
+	export type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>['mapTaskToType']>
 
-	export type DefaultBaseTaskConstructDataWithType = DefaultBaseTaskConstructData & {
+	export type ApiTask = DefaultBaseTaskConstructData & {
 		type: TaskTypeName
 	}
 
@@ -65,8 +56,8 @@ export namespace NSTaskAdapter {
 				})
 		}
 
-		abstract _getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<DefaultBaseTaskConstructDataWithType, any>
-		protected abstract _getNextTask(package_id: string): Promise<DefaultBaseTaskConstructDataWithType|undefined>
-		protected abstract _getTask(task_id: string): Promise<DefaultBaseTaskConstructDataWithType|undefined>
+		abstract _getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<ApiTask, any>
+		protected abstract _getNextTask(package_id: string): Promise<ApiTask|undefined>
+		protected abstract _getTask(task_id: string): Promise<ApiTask|undefined>
 	}
 }

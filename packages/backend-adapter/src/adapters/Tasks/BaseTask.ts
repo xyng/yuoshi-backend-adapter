@@ -1,5 +1,3 @@
-import { NSTaskAdapter } from "../AbstractTaskAdapter"
-import Task = NSTaskAdapter.Task
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 import TaskContent = NSTaskContentAdapter.TaskContent
 import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
@@ -17,7 +15,7 @@ export interface BaseTaskConstructData<T> {
 
 export type DefaultBaseTaskConstructData = BaseTaskConstructData<AsyncIterableWrapper<TaskContent>>
 
-export abstract class BaseTask<T> implements Task {
+export abstract class BaseTask<T> {
 	public readonly id: string
 	public readonly title: string
 	public readonly description: string | undefined
