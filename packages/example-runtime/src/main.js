@@ -155,7 +155,7 @@ const base = "http://localhost:8092"
 					console.log("Frage: " + content.question)
 
 					const answerString = content.answers.reduce((acc, item, index) => {
-						return acc + `${ index }) ${ item.content }`
+						return acc + `${ index })`
 					}, "\n")
 
 					const answer = await askQuestion("Welche Antwort ist korrekt?" + answerString)
