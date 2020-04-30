@@ -18,7 +18,6 @@ export default class TaskContentQuestAdapter<
 				question: data.attributes.question as string,
 				image: data.attributes.image as string,
 				prePhrase: data.attributes.prePhrase as string,
-				content: data.attributes.content as string,
 				multiple: data.attributes.multiple,
 				require_order: data.attributes.require_order,
 				custom_answer: data.attributes.custom_answer,

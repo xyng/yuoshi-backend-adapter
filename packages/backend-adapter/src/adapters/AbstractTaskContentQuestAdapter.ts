@@ -10,7 +10,6 @@ export namespace NSTaskContentQuestAdapter {
 		question: string
 		image?: string
 		prePhrase?: string
-		content?: string
 		multiple: boolean,
 		require_order: boolean,
 		custom_answer: boolean,
