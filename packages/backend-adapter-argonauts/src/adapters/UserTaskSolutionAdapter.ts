@@ -12,8 +12,8 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 		done_quests: string[]
 	}> {
 		const reqPath = solution_id
-			? `plugins.php/argonautsplugin/task_solutions/${solution_id}`
-			: `plugins.php/argonautsplugin/tasks/${task_id}/current_task_solution`
+			? `/task_solutions/${solution_id}`
+			: `/tasks/${task_id}/current_task_solution`
 
 		const { data } = await this.requestAdapter.getAuthorized(
 			reqPath,
@@ -66,7 +66,7 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 		value: string
 	} | undefined> {
 		const { data } = await this.requestAdapter.postAuthorized(
-			`plugins.php/argonautsplugin/content_solutions`,
+			`/content_solutions`,
 			{
 				data: {
 					attributes: {
@@ -106,7 +106,7 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 		sent_solution: boolean,
 	} | undefined> {
 		const { data } = await this.requestAdapter.postAuthorized(
-			`plugins.php/argonautsplugin/quest_solutions`,
+			`/quest_solutions`,
 			{
 				data: {
 					attributes: {},
@@ -168,7 +168,7 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 		}[]
 	} | undefined> {
 		const { data } = await this.requestAdapter.getAuthorized(
-			`plugins.php/argonautsplugin/quest_solutions/${quest_solution_id}/sample_solution`
+			`/quest_solutions/${quest_solution_id}/sample_solution`
 		)
 
 		return data

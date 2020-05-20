@@ -16,7 +16,7 @@ export default class TaskAdapter<
 				}
 			})
 
-			return this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/packages/${package_id}/tasks`, config)
+			return this.requestAdapter.getAuthorized(`/packages/${package_id}/tasks`, config)
 		}, (data) => {
 			return {
 				id: data.id,
@@ -33,7 +33,7 @@ export default class TaskAdapter<
 	}
 
 	async _getNextTask(package_id: string): Promise<ApiTask|undefined> {
-		const { data: { data } } = await this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/packages/${package_id}/nextTask`)
+		const { data: { data } } = await this.requestAdapter.getAuthorized(`/packages/${package_id}/nextTask`)
 
 		if (!data) {
 			return undefined;
@@ -53,7 +53,7 @@ export default class TaskAdapter<
     }
 
     async _getTask(task_id: string): Promise<ApiTask|undefined> {
-		const { data: { data } } = await this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/tasks/${task_id}`)
+		const { data: { data } } = await this.requestAdapter.getAuthorized(`/tasks/${task_id}`)
 
 		if (!data) {
 			return undefined;

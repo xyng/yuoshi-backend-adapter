@@ -40,7 +40,7 @@ export default class CourseAdapter<
 	getCourses(user_id: string): Paginator<Course, RequestBackendConfigType> {
     	return new Paginator<Course, RequestBackendConfigType>(
     		config => {
-    			return this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/users/${user_id}/courses`, config)
+    			return this.requestAdapter.getAuthorized(`/users/${user_id}/courses`, config)
 			},
 			mapCourseData(this.backendAdapter as BackendAdapter<RequestBackendConfigType>)
 		)
@@ -60,7 +60,7 @@ export default class CourseAdapter<
 				}
 
     			return this.requestAdapter.getAuthorized(
-    				`plugins.php/argonautsplugin/courses/${course_id}/memberships`,
+    				`/courses/${course_id}/memberships`,
 					config
 				)
 			},
