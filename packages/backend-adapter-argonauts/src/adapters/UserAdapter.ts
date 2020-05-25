@@ -26,7 +26,7 @@ export default class UserAdapter<
 > extends NSUserAdapter.AbstractUserAdapter<RequestBackendConfigType, StudipOauthAuthenticationHandler> {
 	async getInfo(user_id: string = "me"): Promise<UserInfo | undefined> {
 		try {
-			const { data } = await this.requestAdapter.get(`plugins.php/argonautsplugin/users/${user_id}`, {
+			const { data } = await this.requestAdapter.get(`/users/${user_id}`, {
 				auth: true
 			})
 

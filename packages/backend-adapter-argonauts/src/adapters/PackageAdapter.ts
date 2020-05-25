@@ -9,7 +9,7 @@ export default class PackageAdapter<
 	getPackagesForCourse(course_id: string): Paginator<NSPackageAdapter.Package, any> {
 		return new Paginator<NSPackageAdapter.Package, RequestBackendConfigType>(
     		config => {
-				return this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/courses/${course_id}/packages`, config)
+				return this.requestAdapter.getAuthorized(`/courses/${course_id}/packages`, config)
 			},
 			(data) => {
     			return {

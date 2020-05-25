@@ -9,7 +9,7 @@ export default class TaskContentAdapter<
 > extends NSTaskContentAdapter.AbstractTaskContentAdapter<RequestBackendConfigType, StudipOauthAuthenticationHandler> {
 	getContentsForTask(task_id: string): Paginator<TaskContent, any> {
 		return new Paginator<TaskContent, any>((config) => {
-			return this.requestAdapter.getAuthorized(`plugins.php/argonautsplugin/tasks/${task_id}/contents`, config)
+			return this.requestAdapter.getAuthorized(`/tasks/${task_id}/contents`, config)
 		}, (data): TaskContent => {
 			return {
 				id: data.id,
