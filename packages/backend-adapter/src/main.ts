@@ -10,10 +10,12 @@ export {
 export { BackendAdapterInterface } from "./interfaces/BackendAdapterInterface"
 
 export {
-	default as AuthenticationHandlerInterface
+	default as AuthenticationHandlerInterface,
 } from "./interfaces/AuthenticationHandlerInterface"
 
-export { OAuth1AuthenticationHandler } from "./adapters/OAuth1AuthenticationHandler"
+export {
+	OAuth1AuthenticationHandler,
+} from "./adapters/OAuth1AuthenticationHandler"
 
 export { AbstractPaginator, PaginationData } from "./adapters/AbstractPaginator"
 
@@ -25,8 +27,12 @@ export { NSCourseAdapter } from "./adapters/AbstractCourseAdapter"
 export { NSPackageAdapter } from "./adapters/AbstractPackageAdapter"
 export { NSTaskAdapter } from "./adapters/AbstractTaskAdapter"
 export { NSTaskContentAdapter } from "./adapters/AbstractTaskContentAdapter"
-export { NSTaskContentQuestAdapter } from "./adapters/AbstractTaskContentQuestAdapter"
-export { NSTaskContentQuestAnswerAdapter } from "./adapters/AbstractTaskContentQuestAnswerAdapter"
+export {
+	NSTaskContentQuestAdapter,
+} from "./adapters/AbstractTaskContentQuestAdapter"
+export {
+	NSTaskContentQuestAnswerAdapter,
+} from "./adapters/AbstractTaskContentQuestAnswerAdapter"
 export { NSUserTaskSolution } from "./adapters/AbstractUserTaskSolutionAdapter"
 
 // Helpers
@@ -42,4 +48,6 @@ export * from "./adapters/Tasks/Tag"
 export * from "./adapters/Tasks/Memory"
 export * from "./adapters/Tasks/Card"
 export * from "./adapters/Tasks/Training"
+export * from "./adapters/Tasks/Text"
+
 export { default as TaskFactory } from "./adapters/Tasks/TaskFactory"
