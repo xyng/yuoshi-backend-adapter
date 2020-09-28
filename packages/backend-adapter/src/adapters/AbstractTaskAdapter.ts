@@ -5,6 +5,7 @@ import { AbstractPaginator } from "./AbstractPaginator"
 import { DefaultBaseTaskConstructData } from "./Tasks/BaseTask"
 
 import TaskFactory from "./Tasks/TaskFactory"
+
 import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper"
 
 export namespace NSTaskAdapter {
