@@ -16,21 +16,32 @@ export namespace NSTaskAdapter {
 		TAG = "tag",
 		MEMORY = "memory",
 		CARD = "card",
-		TRAINING = "training"
+		TRAINING = "training",
+		TEXT = "text",
 	}
 
-	export type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>['mapTaskToType']>
+	export type TaskTypeMap = ReturnType<
+		AbstractTaskAdapter<any, any>["mapTaskToType"]
+	>
 
 	export type ApiTask = DefaultBaseTaskConstructData & {
 		type: TaskTypeName
 	}
 
-	export abstract class AbstractTaskAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		protected mapTaskToType(task: DefaultBaseTaskConstructData, type: TaskTypeName) {
+	export abstract class AbstractTaskAdapter<
+		RequestConfigType,
+		AuthenticationHandler extends AuthenticationHandlerInterface
+	> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
+		protected mapTaskToType(
+			task: DefaultBaseTaskConstructData,
+			type: TaskTypeName
+		) {
 			return TaskFactory.getTask(type, task)
 		}
 
-		async getNextTask(package_id: string): Promise<TaskTypeMap|undefined> {
+		async getNextTask(
+			package_id: string
+		): Promise<TaskTypeMap | undefined> {
 			const data = await this._getNextTask(package_id)
 			if (!data) {
 				return
@@ -39,7 +50,7 @@ export namespace NSTaskAdapter {
 			return this.mapTaskToType(data, data.type)
 		}
 
-		async getTask(task_id: string): Promise<TaskTypeMap|undefined> {
+		async getTask(task_id: string): Promise<TaskTypeMap | undefined> {
 			const data = await this._getTask(task_id)
 			if (!data) {
 				return
@@ -48,16 +59,26 @@ export namespace NSTaskAdapter {
 			return this.mapTaskToType(data, data.type)
 		}
 
-		getTasksForPackage(package_id: string, sequence?: number): AsyncIterableWrapper<TaskTypeMap> {
+		getTasksForPackage(
+			package_id: string,
+			sequence?: number
+		): AsyncIterableWrapper<TaskTypeMap> {
 			return this._getTasksForPackage(package_id, sequence)
 				.getWrapped()
-				.map((item) => {
+				.map(item => {
 					return this.mapTaskToType(item, item.type)
 				})
 		}
 
-		abstract _getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<ApiTask, any>
-		protected abstract _getNextTask(package_id: string): Promise<ApiTask|undefined>
-		protected abstract _getTask(task_id: string): Promise<ApiTask|undefined>
+		abstract _getTasksForPackage(
+			package_id: string,
+			sequence?: number
+		): AbstractPaginator<ApiTask, any>
+		protected abstract _getNextTask(
+			package_id: string
+		): Promise<ApiTask | undefined>
+		protected abstract _getTask(
+			task_id: string
+		): Promise<ApiTask | undefined>
 	}
 }

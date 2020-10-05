@@ -9,9 +9,7 @@ export {
 
 export { BackendAdapterInterface } from "./interfaces/BackendAdapterInterface"
 
-export {
-	default as AuthenticationHandlerInterface
-} from "./interfaces/AuthenticationHandlerInterface"
+export { default as AuthenticationHandlerInterface } from "./interfaces/AuthenticationHandlerInterface"
 
 export { OAuth1AuthenticationHandler } from "./adapters/OAuth1AuthenticationHandler"
 
@@ -42,4 +40,6 @@ export * from "./adapters/Tasks/Tag"
 export * from "./adapters/Tasks/Memory"
 export * from "./adapters/Tasks/Card"
 export * from "./adapters/Tasks/Training"
+export * from "./adapters/Tasks/Text"
+
 export { default as TaskFactory } from "./adapters/Tasks/TaskFactory"
