@@ -1,6 +1,6 @@
 {
 	"name": "@xyng/yuoshi-backend-adapter-argonauts",
-	"version": "0.0.2",
+	"version": "0.0.2-beta.1",
 	"description": "",
 	"repository": {
 		"type": "git",
@@ -23,7 +23,7 @@
 	"author": "Daniel Melchior",
 	"license": "MIT",
 	"dependencies": {
-		"@xyng/yuoshi-backend-adapter": "^0.0.2"
+		"@xyng/yuoshi-backend-adapter": "^0.0.2-beta.1"
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^11.0.1",
