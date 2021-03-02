@@ -34,8 +34,8 @@ export namespace NSTaskAdapter {
 			return TaskFactory.getTask(type, task)
 		}
 
-		async getNextTask(package_id: string): Promise<TaskTypeMap | undefined> {
-			const data = await this._getNextTask(package_id)
+		async getNextTask(package_id, station_id: string): Promise<TaskTypeMap | undefined> {
+			const data = await this._getNextTask(package_id, station_id)
 			if (!data) {
 				return
 			}
@@ -70,7 +70,7 @@ export namespace NSTaskAdapter {
 
 		abstract _getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<ApiTask, any>
 		abstract _getTasksForStation(station_id: string, sequence?: number): AbstractPaginator<ApiTask, any>
-		protected abstract _getNextTask(package_id: string): Promise<ApiTask | undefined>
+		protected abstract _getNextTask(package_id, station_id: string): Promise<ApiTask | undefined>
 		protected abstract _getTask(task_id: string): Promise<ApiTask | undefined>
 	}
 }

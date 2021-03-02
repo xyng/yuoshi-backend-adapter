@@ -64,10 +64,10 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 	}
 
 	//TODO _getPrevious
-	async _getNextTask(package_id: string): Promise<ApiTask | undefined> {
+	async _getNextTask(package_id, station_id: string): Promise<ApiTask | undefined> {
 		const {
 			data: { data },
-		} = await this.requestAdapter.getAuthorized(`/packages/${package_id}/nextTask`)
+		} = await this.requestAdapter.getAuthorized(`/packages/${package_id}/stations/${station_id}/nextTask`)
 
 		if (!data) {
 			return undefined

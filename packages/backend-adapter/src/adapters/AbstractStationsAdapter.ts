@@ -17,5 +17,6 @@ export namespace NSStationsAdapter {
 		AuthenticationHandler extends AuthenticationHandlerInterface
 	> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
 		abstract getStationsForPackage(station_id: string): AbstractPaginator<Station, any>
+		// abstract getStation(station_id: string): AbstractPaginator<Station, any>
 	}
 }
