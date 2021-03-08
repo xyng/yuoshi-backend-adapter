@@ -52,14 +52,6 @@ export namespace NSTaskAdapter {
 			return this.mapTaskToType(data, data.type)
 		}
 
-		getTasksForPackage(package_id: string, sequence?: number): AsyncIterableWrapper<TaskTypeMap> {
-			return this._getTasksForPackage(package_id, sequence)
-				.getWrapped()
-				.map(item => {
-					return this.mapTaskToType(item, item.type)
-				})
-		}
-
 		getTasksForStation(stations_id: string, sequence?: number): AsyncIterableWrapper<TaskTypeMap> {
 			return this._getTasksForStation(stations_id, sequence)
 				.getWrapped()
@@ -68,7 +60,6 @@ export namespace NSTaskAdapter {
 				})
 		}
 
-		abstract _getTasksForPackage(package_id: string, sequence?: number): AbstractPaginator<ApiTask, any>
 		abstract _getTasksForStation(station_id: string, sequence?: number): AbstractPaginator<ApiTask, any>
 		protected abstract _getNextTask(package_id, station_id: string): Promise<ApiTask | undefined>
 		protected abstract _getTask(task_id: string): Promise<ApiTask | undefined>

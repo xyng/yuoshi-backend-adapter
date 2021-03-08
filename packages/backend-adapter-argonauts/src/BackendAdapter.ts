@@ -11,7 +11,7 @@ import { StudipOauthAuthenticationHandler } from "./StudipOauthAuthenticationHan
 import UserAdapter from "./adapters/UserAdapter"
 import CourseAdapter from "./adapters/CourseAdapter"
 import PackageAdapter from "./adapters/PackageAdapter"
-import StationsAdapter from "./adapters/StationsAdapter"
+import StationsAdapter from "./adapters/StationAdapter"
 import TaskAdapter from "./adapters/TaskAdapter"
 import TaskContentAdapter from "./adapters/TaskContentAdapter"
 import TaskContentQuestAdapter from "./adapters/TaskContentQuestAdapter"

@@ -9,33 +9,6 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 	RequestBackendConfigType,
 	StudipOauthAuthenticationHandler
 > {
-	_getTasksForPackage(package_id: string, sequence?: number): Paginator<ApiTask, any> {
-		return new Paginator<ApiTask, RequestBackendConfigType>(
-			config => {
-				config = this.requestAdapter.mergeConfig(config, {
-					params: {
-						"filter[sequence]": sequence,
-					},
-				})
-
-				return this.requestAdapter.getAuthorized(`/packages/${package_id}/tasks`, config)
-			},
-			data => {
-				return {
-					id: data.id,
-					type: data.attributes.kind,
-					title: data.attributes.title,
-					description: data.attributes.description,
-					image: data.attributes.image,
-					credits: data.attributes.credits,
-					contents: AsyncIterableWrapper.fromAsyncIterable(
-						this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
-					),
-				}
-			}
-		)
-	}
-
 	_getTasksForStation(station_id: string, sequence?: number): Paginator<ApiTask, any> {
 		return new Paginator<ApiTask, RequestBackendConfigType>(
 			config => {
@@ -63,7 +36,6 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 		)
 	}
 
-	//TODO _getPrevious
 	async _getNextTask(package_id, station_id: string): Promise<ApiTask | undefined> {
 		const {
 			data: { data },
