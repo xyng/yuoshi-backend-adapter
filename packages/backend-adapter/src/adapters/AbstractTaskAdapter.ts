@@ -20,9 +20,7 @@ export namespace NSTaskAdapter {
 		TEXT = "text",
 	}
 
-	export type TaskTypeMap = ReturnType<
-		AbstractTaskAdapter<any, any>["mapTaskToType"]
-	>
+	export type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>["mapTaskToType"]>
 
 	export type ApiTask = DefaultBaseTaskConstructData & {
 		type: TaskTypeName
@@ -32,17 +30,12 @@ export namespace NSTaskAdapter {
 		RequestConfigType,
 		AuthenticationHandler extends AuthenticationHandlerInterface
 	> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		protected mapTaskToType(
-			task: DefaultBaseTaskConstructData,
-			type: TaskTypeName
-		) {
+		protected mapTaskToType(task: DefaultBaseTaskConstructData, type: TaskTypeName) {
 			return TaskFactory.getTask(type, task)
 		}
 
-		async getNextTask(
-			package_id: string
-		): Promise<TaskTypeMap | undefined> {
-			const data = await this._getNextTask(package_id)
+		async getNextTask(package_id, station_id: string): Promise<TaskTypeMap | undefined> {
+			const data = await this._getNextTask(package_id, station_id)
 			if (!data) {
 				return
 			}
@@ -59,26 +52,16 @@ export namespace NSTaskAdapter {
 			return this.mapTaskToType(data, data.type)
 		}
 
-		getTasksForPackage(
-			package_id: string,
-			sequence?: number
-		): AsyncIterableWrapper<TaskTypeMap> {
-			return this._getTasksForPackage(package_id, sequence)
+		getTasksForStation(stations_id: string, sequence?: number): AsyncIterableWrapper<TaskTypeMap> {
+			return this._getTasksForStation(stations_id, sequence)
 				.getWrapped()
 				.map(item => {
 					return this.mapTaskToType(item, item.type)
 				})
 		}
 
-		abstract _getTasksForPackage(
-			package_id: string,
-			sequence?: number
-		): AbstractPaginator<ApiTask, any>
-		protected abstract _getNextTask(
-			package_id: string
-		): Promise<ApiTask | undefined>
-		protected abstract _getTask(
-			task_id: string
-		): Promise<ApiTask | undefined>
+		abstract _getTasksForStation(station_id: string, sequence?: number): AbstractPaginator<ApiTask, any>
+		protected abstract _getNextTask(package_id, station_id: string): Promise<ApiTask | undefined>
+		protected abstract _getTask(task_id: string): Promise<ApiTask | undefined>
 	}
 }

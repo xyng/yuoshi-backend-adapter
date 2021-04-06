@@ -9,28 +9,26 @@ const readline = require("readline")
 const secrets = require("../secrets.json")
 
 function askQuestion(query) {
-    const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    });
+	const rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout,
+	})
 
-    return new Promise(resolve => rl.question(query + "\n", ans => {
-        rl.close();
-        resolve(ans);
-    }))
+	return new Promise(resolve =>
+		rl.question(query + "\n", ans => {
+			rl.close()
+			resolve(ans)
+		})
+	)
 }
 
 async function logRequest(respPromise) {
-	let resp;
+	let resp
 
 	try {
 		resp = await respPromise
 	} catch (e) {
-		console.log(
-			typeof e,
-			e.constructor.name,
-			e instanceof RequestError
-		)
+		console.log(typeof e, e.constructor.name, e instanceof RequestError)
 		if (e instanceof RequestError) {
 			console.log("request had error: ", e.status, e.response.statusText)
 
@@ -96,18 +94,12 @@ const base = "http://localhost:8092"
 					key: oauth_token,
 					secrets: oauth_token_secret,
 				}
-
-				console.log(auth_tokens)
 			} catch (e) {
 				console.log(e)
 			}
 		}
 	} catch (e) {
-		console.log(
-			typeof e,
-			e.constructor.name,
-			e instanceof RequestError
-		)
+		console.log(typeof e, e.constructor.name, e instanceof RequestError)
 		if (e instanceof RequestError) {
 			console.log("request had error: ", e.status, e.response.statusText)
 
@@ -130,7 +122,7 @@ const base = "http://localhost:8092"
 		const packageArray = await AsyncIterableWrapper.fromAsyncIterable(packages).toArray()
 
 		const packageString = packageArray.reduce((acc, item, index) => {
-			return acc + `${ index }) ${ item.title }`
+			return acc + `${index}) ${item.title}`
 		}, "\n")
 
 		const packageId = await askQuestion("Welches Package möchtest du spielem?" + packageString)
@@ -145,17 +137,13 @@ const base = "http://localhost:8092"
 				break
 			}
 
-			console.log(task.type)
-
 			if (task.type === "multi") {
 				const staticTask = await task.getStatic()
 				const answers = []
 
 				for (const content of staticTask.contents) {
-					console.log("Frage: " + content.question)
-
 					const answerString = content.answers.reduce((acc, item, index) => {
-						return acc + `${ index })`
+						return acc + `${index})`
 					}, "\n")
 
 					const answer = await askQuestion("Welche Antwort ist korrekt?" + answerString)
@@ -163,7 +151,7 @@ const base = "http://localhost:8092"
 					answers.push({
 						content_id: content.content_id,
 						quest_id: content.id,
-						answer_id: content.answers[parseInt(answer)].id
+						answer_id: content.answers[parseInt(answer)].id,
 					})
 				}
 

@@ -3,21 +3,19 @@ import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerI
 import { NSUserAdapter } from "./AbstractUserAdapter"
 import { AbstractPaginator } from "./AbstractPaginator"
 import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper"
-import { NSStationsAdapter } from "./AbstractStationsAdapter"
+import { NSTaskAdapter } from "./AbstractTaskAdapter"
 
-export namespace NSPackageAdapter {
-	export interface Package<T = any> extends DefaultEntity<T> {
+export namespace NSStationsAdapter {
+	export interface Station<T = any> extends DefaultEntity<T> {
 		title: string
 		slug: string
-		playable: boolean
 		description?: string
-		stations: AsyncIterableWrapper<NSStationsAdapter.Station>
+		tasks: AsyncIterableWrapper<NSTaskAdapter.TaskTypeMap>
 	}
-
-	export abstract class AbstractPackageAdapter<
+	export abstract class AbstractStationsAdapter<
 		RequestConfigType,
 		AuthenticationHandler extends AuthenticationHandlerInterface
 	> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		abstract getPackagesForCourse(course_id: string): AbstractPaginator<Package, any>
+		abstract getStationsForPackage(station_id: string): AbstractPaginator<Station, any>
 	}
 }

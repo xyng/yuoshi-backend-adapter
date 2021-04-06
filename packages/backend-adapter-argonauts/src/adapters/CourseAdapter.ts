@@ -2,7 +2,8 @@ import {
 	AbstractRequestAdapter,
 	NSCourseAdapter,
 	NSUserAdapter,
-	AsyncIterableWrapper, BackendAdapterInterface,
+	AsyncIterableWrapper,
+	BackendAdapterInterface,
 } from "@xyng/yuoshi-backend-adapter"
 
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
@@ -24,54 +25,45 @@ export const mapCourseData = (backendAdapter: BackendAdapter<any>) => {
 			id: data.id,
 			title: data.attributes.title,
 			description: data.attributes.description,
-			lecturers: await backendAdapter.courseAdapter
-				.getMemberships(data.id, "dozent")
-				.getWrapped(),
-			packages: await backendAdapter.packageAdapter
-				.getPackagesForCourse(data.id)
-				.getWrapped()
+			lecturers: await backendAdapter.courseAdapter.getMemberships(data.id, "dozent").getWrapped(),
+			packages: await backendAdapter.packageAdapter.getPackagesForCourse(data.id).getWrapped(),
 		}
 	}
 }
 
-export default class CourseAdapter<
-	RequestBackendConfigType
-> extends NSCourseAdapter.AbstractCourseAdapter<RequestBackendConfigType, StudipOauthAuthenticationHandler> {
+export default class CourseAdapter<RequestBackendConfigType> extends NSCourseAdapter.AbstractCourseAdapter<
+	RequestBackendConfigType,
+	StudipOauthAuthenticationHandler
+> {
 	getCourses(user_id: string): Paginator<Course, RequestBackendConfigType> {
-    	return new Paginator<Course, RequestBackendConfigType>(
-    		config => {
-    			return this.requestAdapter.getAuthorized(`/users/${user_id}/courses`, config)
-			},
-			mapCourseData(this.backendAdapter as BackendAdapter<RequestBackendConfigType>)
-		)
+		return new Paginator<Course, RequestBackendConfigType>(config => {
+			return this.requestAdapter.getAuthorized(`/users/${user_id}/courses`, config)
+		}, mapCourseData(this.backendAdapter as BackendAdapter<RequestBackendConfigType>))
 	}
 
 	getMemberships(course_id: string, permission?: string): Paginator<Membership, RequestBackendConfigType> {
 		return new Paginator<Membership, RequestBackendConfigType>(
-    		config => {
-    			if (permission) {
-    				config = this.requestAdapter.mergeConfig(config, {
+			config => {
+				if (permission) {
+					config = this.requestAdapter.mergeConfig(config, {
 						params: {
 							filter: {
-								permission
-							}
-						}
+								permission,
+							},
+						},
 					})
 				}
 
-    			return this.requestAdapter.getAuthorized(
-    				`/courses/${course_id}/memberships`,
-					config
-				)
+				return this.requestAdapter.getAuthorized(`/courses/${course_id}/memberships`, config)
 			},
 			async (membership): Promise<Membership> => {
-    			return {
-    				...(await this.backendAdapter.userAdapter.getInfo(membership.relationships.user.data.id)),
+				return {
+					...(await this.backendAdapter.userAdapter.getInfo(membership.relationships.user.data.id)),
 					misc: {
-    					permission: membership.attributes.permission,
+						permission: membership.attributes.permission,
 						group: membership.attributes.group,
 						date: new Date(membership.attributes.date),
-					}
+					},
 				}
 			}
 		)
