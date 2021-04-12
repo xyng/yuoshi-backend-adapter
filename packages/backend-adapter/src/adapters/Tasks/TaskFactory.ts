@@ -12,7 +12,6 @@ import { StaticTag, Tag } from "./Tag"
 import { Memory, StaticMemory } from "./Memory"
 import { Card, StaticCard } from "./Card"
 import { StaticTraining, Training } from "./Training"
-import { StaticText, Text } from "./Text"
 
 export enum TaskTypeName {
 	SURVEY = "survey",
@@ -23,7 +22,6 @@ export enum TaskTypeName {
 	MEMORY = "memory",
 	CARD = "card",
 	TRAINING = "training",
-	TEXT = "text",
 }
 
 type TaskTypeMap = {
@@ -35,7 +33,6 @@ type TaskTypeMap = {
 	[TaskTypeName.MEMORY]: Memory
 	[TaskTypeName.CARD]: Card
 	[TaskTypeName.TRAINING]: Training
-	[TaskTypeName.TEXT]: Text
 }
 
 type StaticTaskTypeMap = {
@@ -80,8 +77,6 @@ export default class TaskFactory {
 				return new Card(task) as any
 			case TaskTypeName.TRAINING:
 				return new Training(task) as any
-			case TaskTypeName.TEXT:
-				return new Text(task) as any
 			default:
 				throw new Error("Unknown Task type given")
 		}
@@ -109,8 +104,7 @@ export default class TaskFactory {
 				return new StaticCard(task as any) as any
 			case TaskTypeName.TRAINING:
 				return new StaticTraining(task as any) as any
-			case TaskTypeName.TEXT:
-				return new StaticText(task as any) as any
+
 			default:
 				throw new Error("Unknown Task type given")
 		}
