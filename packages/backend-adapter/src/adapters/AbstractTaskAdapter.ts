@@ -17,7 +17,6 @@ export namespace NSTaskAdapter {
 		MEMORY = "memory",
 		CARD = "card",
 		TRAINING = "training",
-		TEXT = "text",
 	}
 
 	export type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>["mapTaskToType"]>

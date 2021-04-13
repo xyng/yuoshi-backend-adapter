@@ -41,6 +41,5 @@ export * from "./adapters/Tasks/Tag"
 export * from "./adapters/Tasks/Memory"
 export * from "./adapters/Tasks/Card"
 export * from "./adapters/Tasks/Training"
-export * from "./adapters/Tasks/Text"
 
 export { default as TaskFactory } from "./adapters/Tasks/TaskFactory"
