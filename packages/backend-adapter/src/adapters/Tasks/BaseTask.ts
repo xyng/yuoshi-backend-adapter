@@ -5,11 +5,11 @@ import { NSUserTaskSolution } from "../AbstractUserTaskSolutionAdapter"
 import UserTaskSolutionModel = NSUserTaskSolution.UserTaskSolutionModel
 
 export interface BaseTaskConstructData<T> {
-	id: string,
-	title: string,
-	description?: string,
-	image?: string,
-	credits?: number,
+	id: string
+	title: string
+	description?: string
+	image?: string
+	credits?: number
 	contents: T
 }
 
@@ -21,9 +21,10 @@ export abstract class BaseTask<T> {
 	public readonly description: string | undefined
 	public readonly image: string | undefined
 	public readonly credits: number | undefined
+	public readonly solution: any | undefined
 
-	public readonly abstract type: string
-	public readonly abstract isTraining: boolean
+	public abstract readonly type: string
+	public abstract readonly isTraining: boolean
 
 	constructor(data: BaseTaskConstructData<T>) {
 		this.id = data.id
@@ -81,17 +82,15 @@ type AnswerInput = Answer & {
 }
 
 export abstract class AsyncBaseTask<T, AnswerInputType> extends BaseTask<AsyncIterableWrapper<TaskContent>> {
-	public abstract getStatic(): Promise<T>;
+	public abstract getStatic(): Promise<T>
 	public abstract createAnswer(answer: AnswerInputType): UserTaskSolutionModel
 
-	protected createSolutionFromContentAnswers(
-		answers: AnswerInput[]
-	): UserTaskSolutionModel {
+	protected createSolutionFromContentAnswers(answers: AnswerInput[]): UserTaskSolutionModel {
 		const contents: {
 			[key: string]: Answer[]
 		} = {}
 
-		answers.forEach((answer) => {
+		answers.forEach(answer => {
 			contents[answer.content_id] = contents[answer.content_id] || []
 
 			if (answer.custom) {
@@ -113,14 +112,12 @@ export abstract class AsyncBaseTask<T, AnswerInputType> extends BaseTask<AsyncIt
 
 		return {
 			task_id: this.id,
-			contents: Object
-				.entries(contents)
-				.map(([key, answers]) => {
-					return {
-						content_id: key,
-						answers,
-					}
-				})
+			contents: Object.entries(contents).map(([key, answers]) => {
+				return {
+					content_id: key,
+					answers,
+				}
+			}),
 		}
 	}
 }

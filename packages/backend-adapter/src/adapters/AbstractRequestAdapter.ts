@@ -1,14 +1,15 @@
 import {
 	RequestAdapterConfiguration,
 	RequestAdapterInterface,
-	RequestResponseType
+	RequestResponseType,
 } from "../interfaces/RequestAdapterInterface"
 
 import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerInterface"
 
 type ValidRequestTypes = "get" | "post" | "put" | "delete"
 
-export abstract class AbstractRequestAdapter<T, AuthenticationHandler extends AuthenticationHandlerInterface> implements RequestAdapterInterface<T> {
+export abstract class AbstractRequestAdapter<T, AuthenticationHandler extends AuthenticationHandlerInterface>
+	implements RequestAdapterInterface<T> {
 	abstract setBaseUrl(base: string): void
 
 	protected abstract _handleRequest(
@@ -80,13 +81,13 @@ export abstract class AbstractRequestAdapter<T, AuthenticationHandler extends Au
 
 		// prepend baseurl if action is relative
 		// use url helper otherwise
-		const url = action.match(/^http(s)?:\/\//) ?
-			new URL(action, config.base).href
+		const url = action.match(/^http(s)?:\/\//)
+			? new URL(action, config.base).href
 			: `${config.base || ""}/${action}`
 
 		const {
 			data: authenticatedData,
-			config: authenticatedConfig
+			config: authenticatedConfig,
 		} = this.authenticationHandler.getAuthenticationForRequest(type, url, config, data)
 
 		config = this.mergeConfig(config, authenticatedConfig)
@@ -112,34 +113,34 @@ export abstract class AbstractRequestAdapter<T, AuthenticationHandler extends Au
 	}
 
 	delete(action: string, config?: RequestAdapterConfiguration<T>): Promise<RequestResponseType> {
-		return this.handleRequest("delete", action, config);
+		return this.handleRequest("delete", action, config)
 	}
 
 	deleteAuthorized(action: string, config?: RequestAdapterConfiguration<T>): Promise<RequestResponseType> {
-		return this.handleRequestAuthorized("delete", action, config);
+		return this.handleRequestAuthorized("delete", action, config)
 	}
 
 	get(action: string, config?: RequestAdapterConfiguration<T>): Promise<RequestResponseType> {
-		return this.handleRequest("get", action, config);
+		return this.handleRequest("get", action, config)
 	}
 
 	getAuthorized(action: string, config?: RequestAdapterConfiguration<T>): Promise<RequestResponseType> {
-		return this.handleRequestAuthorized("get", action, config);
+		return this.handleRequestAuthorized("get", action, config)
 	}
 
 	post(action: string, data: any, config?: RequestAdapterConfiguration<T>): Promise<RequestResponseType> {
-		return this.handleRequest("post", action, config, data);
+		return this.handleRequest("post", action, config, data)
 	}
 
 	postAuthorized(action: string, data: any, config?: RequestAdapterConfiguration<T>): Promise<RequestResponseType> {
-		return this.handleRequestAuthorized("post", action, config, data);
+		return this.handleRequestAuthorized("post", action, config, data)
 	}
 
 	put(action: string, data: any, config?: RequestAdapterConfiguration<T>): Promise<RequestResponseType> {
-		return this.handleRequest("put", action, config, data);
+		return this.handleRequest("put", action, config, data)
 	}
 
 	putAuthorized(action: string, data: any, config?: RequestAdapterConfiguration<T>): Promise<RequestResponseType> {
-		return this.handleRequestAuthorized("put", action, config, data);
+		return this.handleRequestAuthorized("put", action, config, data)
 	}
 }

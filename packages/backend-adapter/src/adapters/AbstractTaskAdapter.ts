@@ -42,6 +42,15 @@ export namespace NSTaskAdapter {
 			return this.mapTaskToType(data, data.type)
 		}
 
+		async getPrevTask(station_id: string, current_task_id: string): Promise<TaskTypeMap | undefined> {
+			const data = await this._getPrevTask(station_id, current_task_id)
+			if (!data) {
+				return
+			}
+
+			return this.mapTaskToType(data, data.type)
+		}
+
 		async getTask(task_id: string): Promise<TaskTypeMap | undefined> {
 			const data = await this._getTask(task_id)
 			if (!data) {
@@ -61,6 +70,7 @@ export namespace NSTaskAdapter {
 
 		abstract _getTasksForStation(station_id: string, sequence?: number): AbstractPaginator<ApiTask, any>
 		protected abstract _getNextTask(package_id, station_id: string): Promise<ApiTask | undefined>
+		protected abstract _getPrevTask(station_id: string, current_task_id: string): Promise<ApiTask | undefined>
 		protected abstract _getTask(task_id: string): Promise<ApiTask | undefined>
 	}
 }
