@@ -1,9 +1,4 @@
-import {
-	BaseTask,
-	BaseTaskConstructData,
-	DefaultBaseTaskConstructData,
-	StaticBaseTask,
-} from "./BaseTask"
+import { BaseTask, BaseTaskConstructData, DefaultBaseTaskConstructData, StaticBaseTask } from "./BaseTask"
 import { Multi, StaticMulti } from "./Multi"
 import { StaticSurvey, Survey } from "./Survey"
 import { Drag, StaticDrag } from "./Drag"
@@ -44,21 +39,15 @@ type StaticTaskTypeMap = {
 	[TaskTypeName.MEMORY]: StaticMemory
 	[TaskTypeName.CARD]: StaticCard
 	[TaskTypeName.TRAINING]: StaticTraining
-	[TaskTypeName.TEXT]: StaticText
 }
 
-type StaticTaskType<
-	TKey extends keyof StaticTaskTypeMap
-> = StaticTaskTypeMap[TKey]
+type StaticTaskType<TKey extends keyof StaticTaskTypeMap> = StaticTaskTypeMap[TKey]
 type TaskType<TKey extends keyof TaskTypeMap> = TaskTypeMap[TKey]
 
 type InferContentType<T> = T extends BaseTask<infer C> ? C : never
 
 export default class TaskFactory {
-	static getTask<TKey extends keyof TaskTypeMap>(
-		type: TKey,
-		task: DefaultBaseTaskConstructData
-	): TaskType<TKey> {
+	static getTask<TKey extends keyof TaskTypeMap>(type: TKey, task: DefaultBaseTaskConstructData): TaskType<TKey> {
 		// return and task typing is weird in here. seems to work from the outside though.
 		switch (type) {
 			case TaskTypeName.SURVEY:
@@ -104,7 +93,6 @@ export default class TaskFactory {
 				return new StaticCard(task as any) as any
 			case TaskTypeName.TRAINING:
 				return new StaticTraining(task as any) as any
-
 			default:
 				throw new Error("Unknown Task type given")
 		}
