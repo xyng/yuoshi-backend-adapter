@@ -2,6 +2,7 @@ import { NSUserTaskSolution } from "@xyng/yuoshi-backend-adapter"
 import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHandler"
 import AbstractUserTaskSolutionAdapter = NSUserTaskSolution.AbstractUserTaskSolutionAdapter
 import QuestSolution = NSUserTaskSolution.QuestSolution
+import UserTaskSolutionModel = NSUserTaskSolution.UserTaskSolutionModel
 
 export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractUserTaskSolutionAdapter<
 	RequestBackendConfigType,
@@ -253,6 +254,66 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 		return {
 			content_solutions: await Promise.all(content_solutions),
 			quest_solutions: quest_solutions,
+		}
+	}
+
+	private resolveIncluded(data: any, entity?: { type: string; id: string }) {
+		if (!entity) {
+			return []
+		}
+
+		return data.included.filter(e => {
+			return e.type === entity.type && e.id === entity.id
+		}) ?? []
+	}
+
+	public async getCurrentSolution(task_id: string): Promise<UserTaskSolutionModel|undefined> {
+		const {
+			data,
+		} = await this.requestAdapter.getAuthorized(
+			`/tasks/${task_id}/current_task_solution?no_create&include=content_solutions.quest_solutions.answers`
+		)
+
+		const solution = data?.data
+
+		if (!solution) {
+			return undefined
+		}
+
+		const content_solutions = this.resolveIncluded(data, solution?.relationships?.content_solution.data)
+
+		return {
+			task_id,
+			contents: content_solutions.map((content_solution) => {
+				const quest_solutions = this.resolveIncluded(data, content_solution?.relationships?.quest_solution.data)
+
+				return {
+					content_id: content_solution.content_id,
+					value: content_solution.value,
+					answers: quest_solutions.reduce((acc, quest_solution) => {
+						const answers = this.resolveIncluded(data, quest_solution?.relationships?.answers.data)
+
+						return [
+							...acc,
+							...answers.map((answer): QuestSolution => {
+								if (answer.custom) {
+									return {
+										quest_id: quest_solution.data.quest_id,
+										custom: answer.custom,
+										sort: answer.sort,
+									}
+								}
+
+								return {
+									quest_id: quest_solution.data.quest_id,
+									answer_id: answer.answer_id,
+									sort: answer.sort,
+								}
+							})
+						]
+					}, [])
+				}
+			})
 		}
 	}
 }

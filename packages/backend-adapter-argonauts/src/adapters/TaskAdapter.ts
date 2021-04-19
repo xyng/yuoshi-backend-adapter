@@ -36,16 +36,6 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 		)
 	}
 
-	resolveIncluded(data: any, entity: { type: string; id: string }, multiple: boolean = true) {
-		const results = data.included.filter(e => {
-			return e.type === entity.type && e.id === entity.id
-		})
-		if (!multiple) {
-			return results[0]
-		}
-		return results
-	}
-
 	async _getPrevTask(station_id: string, current_task_id: string): Promise<ApiTask | undefined> {
 		const {
 			data: { data },
@@ -56,10 +46,6 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 		if (!data) {
 			return undefined
 		}
-		const solution = this.resolveIncluded(data, data.relationships?.solution.data, true)
-		const content_solution = this.resolveIncluded(data, solution?.relationships?.content_solution.data)
-		const quest_solution = this.resolveIncluded(data, content_solution?.relationships?.quest_solution.data)
-		const answers = this.resolveIncluded(data, quest_solution?.relationships?.answers.data)
 
 		return {
 			id: data.id,
@@ -71,16 +57,6 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 			contents: AsyncIterableWrapper.fromAsyncIterable(
 				this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
 			),
-			solution: {
-				...solution,
-				content_solution: {
-					...content_solution,
-					quest_solution: {
-						...quest_solution,
-						answers,
-					},
-				},
-			},
 		}
 	}
 

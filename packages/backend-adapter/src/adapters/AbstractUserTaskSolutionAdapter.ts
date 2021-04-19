@@ -100,5 +100,7 @@ export namespace NSUserTaskSolution {
 				content: string
 			}[]
 		} | undefined>
+
+		public abstract getCurrentSolution(task_id: string): Promise<UserTaskSolutionModel|undefined>
 	}
 }
