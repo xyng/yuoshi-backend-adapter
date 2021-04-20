@@ -59,10 +59,14 @@ export namespace NSTaskAdapter {
 			return this.mapTaskToType(data, data.type)
 		}
 
-		async getTask(task_id: string): Promise<TaskTypeMap | undefined> {
+		async getTask(task_id: string, start: boolean = false): Promise<TaskTypeMap | undefined> {
 			const data = await this._getTask(task_id)
 			if (!data) {
 				return
+			}
+
+			if (start) {
+				await this._startTask(data.id)
 			}
 
 			return this.mapTaskToType(data, data.type)
