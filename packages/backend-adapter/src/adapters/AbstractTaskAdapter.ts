@@ -33,8 +33,8 @@ export namespace NSTaskAdapter {
 			return TaskFactory.getTask(type, task)
 		}
 
-		async getNextTask(package_id, station_id: string, start: boolean = true): Promise<TaskTypeMap | undefined> {
-			const data = await this._getNextTask(package_id, station_id)
+		async getNextTask(station_id: string, start: boolean = true): Promise<TaskTypeMap | undefined> {
+			const data = await this._getNextTask(station_id)
 			if (!data) {
 				return
 			}

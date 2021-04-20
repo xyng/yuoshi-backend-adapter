@@ -262,15 +262,15 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 			return []
 		}
 
-		return data.included.filter(e => {
-			return e.type === entity.type && e.id === entity.id
-		}) ?? []
+		return (
+			data.included.filter(e => {
+				return e.type === entity.type && e.id === entity.id
+			}) ?? []
+		)
 	}
 
-	public async getCurrentSolution(task_id: string): Promise<UserTaskSolutionModel|undefined> {
-		const {
-			data,
-		} = await this.requestAdapter.getAuthorized(
+	public async getCurrentSolution(task_id: string): Promise<UserTaskSolutionModel | undefined> {
+		const { data } = await this.requestAdapter.getAuthorized(
 			`/tasks/${task_id}/current_task_solution?no_create&include=content_solutions.quest_solutions.answers`
 		)
 
@@ -284,7 +284,7 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 
 		return {
 			task_id,
-			contents: content_solutions.map((content_solution) => {
+			contents: content_solutions.map(content_solution => {
 				const quest_solutions = this.resolveIncluded(data, content_solution?.relationships?.quest_solution.data)
 
 				return {
@@ -295,25 +295,27 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 
 						return [
 							...acc,
-							...answers.map((answer): QuestSolution => {
-								if (answer.custom) {
+							...answers.map(
+								(answer): QuestSolution => {
+									if (answer.custom) {
+										return {
+											quest_id: quest_solution.data.quest_id,
+											custom: answer.custom,
+											sort: answer.sort,
+										}
+									}
+
 									return {
 										quest_id: quest_solution.data.quest_id,
-										custom: answer.custom,
+										answer_id: answer.answer_id,
 										sort: answer.sort,
 									}
 								}
-
-								return {
-									quest_id: quest_solution.data.quest_id,
-									answer_id: answer.answer_id,
-									sort: answer.sort,
-								}
-							})
+							),
 						]
-					}, [])
+					}, []),
 				}
-			})
+			}),
 		}
 	}
 }

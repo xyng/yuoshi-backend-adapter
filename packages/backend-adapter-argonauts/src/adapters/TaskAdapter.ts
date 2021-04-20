@@ -39,9 +39,7 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 	async _getPrevTask(station_id: string, current_task_id: string): Promise<ApiTask | undefined> {
 		const {
 			data: { data },
-		} = await this.requestAdapter.getAuthorized(
-			`/stations/${station_id}/prevTask/${current_task_id}?include=solutions.content_solutions.quest_solutions.answers`
-		)
+		} = await this.requestAdapter.getAuthorized(`/stations/${station_id}/prevTask/${current_task_id}`)
 
 		if (!data) {
 			return undefined
@@ -64,10 +62,7 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 		console.log(station_id)
 		const {
 			data: { data },
-		} = await this.requestAdapter.getAuthorized(
-			// ?include=solutions.content_solutions.quest_solutions.answers
-			`/stations/${station_id}/nextTask`
-		)
+		} = await this.requestAdapter.getAuthorized(`/stations/${station_id}/nextTask`)
 
 		if (!data) {
 			return undefined
