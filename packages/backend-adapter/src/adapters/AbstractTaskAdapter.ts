@@ -33,19 +33,27 @@ export namespace NSTaskAdapter {
 			return TaskFactory.getTask(type, task)
 		}
 
-		async getNextTask(package_id, station_id: string): Promise<TaskTypeMap | undefined> {
+		async getNextTask(package_id, station_id: string, start: boolean = true): Promise<TaskTypeMap | undefined> {
 			const data = await this._getNextTask(package_id, station_id)
 			if (!data) {
 				return
 			}
 
+			if (start) {
+				await this._startTask(data.id)
+			}
+
 			return this.mapTaskToType(data, data.type)
 		}
 
-		async getPrevTask(station_id: string, current_task_id: string): Promise<TaskTypeMap | undefined> {
+		async getPrevTask(station_id: string, current_task_id: string, start: boolean = false): Promise<TaskTypeMap | undefined> {
 			const data = await this._getPrevTask(station_id, current_task_id)
 			if (!data) {
 				return
+			}
+
+			if (start) {
+				await this._startTask(data.id)
 			}
 
 			return this.mapTaskToType(data, data.type)
@@ -72,5 +80,6 @@ export namespace NSTaskAdapter {
 		protected abstract _getNextTask(package_id, station_id: string): Promise<ApiTask | undefined>
 		protected abstract _getPrevTask(station_id: string, current_task_id: string): Promise<ApiTask | undefined>
 		protected abstract _getTask(task_id: string): Promise<ApiTask | undefined>
+		protected abstract _startTask(task_id: string): Promise<void>
 	}
 }

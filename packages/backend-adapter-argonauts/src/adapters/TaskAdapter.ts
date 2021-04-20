@@ -105,4 +105,9 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 			),
 		}
 	}
+
+	async _startTask(task_id: string): Promise<void> {
+		// TODO: error handling?
+		await this.requestAdapter.getAuthorized(`/tasks/${task_id}/start`)
+	}
 }
