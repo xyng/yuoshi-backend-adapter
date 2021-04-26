@@ -59,7 +59,6 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 	}
 
 	async _getNextTask(station_id: string): Promise<ApiTask | undefined> {
-		console.log(station_id)
 		const {
 			data: { data },
 		} = await this.requestAdapter.getAuthorized(`/stations/${station_id}/nextTask`)
@@ -67,7 +66,6 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 		if (!data) {
 			return undefined
 		}
-		console.log(data)
 
 		return {
 			id: data.id,
