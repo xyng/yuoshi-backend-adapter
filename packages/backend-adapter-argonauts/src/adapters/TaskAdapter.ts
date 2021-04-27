@@ -36,6 +36,28 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 		)
 	}
 
+	async _getPrevTask(station_id: string, current_task_id: string): Promise<ApiTask | undefined> {
+		const {
+			data: { data },
+		} = await this.requestAdapter.getAuthorized(`/stations/${station_id}/prevTask/${current_task_id}`)
+
+		if (!data) {
+			return undefined
+		}
+
+		return {
+			id: data.id,
+			type: data.attributes.kind,
+			title: data.attributes.title,
+			description: data.attributes.description,
+			image: data.attributes.image,
+			credits: data.attributes.credits,
+			contents: AsyncIterableWrapper.fromAsyncIterable(
+				this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
+			),
+		}
+	}
+
 	async _getNextTask(station_id: string): Promise<ApiTask | undefined> {
 		const {
 			data: { data },
@@ -78,5 +100,10 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 				this.backendAdapter.taskContentAdapter.getContentsForTask(data.id)
 			),
 		}
+	}
+
+	async _startTask(task_id: string): Promise<void> {
+		// TODO: error handling?
+		await this.requestAdapter.getAuthorized(`/tasks/${task_id}/start`)
 	}
 }
