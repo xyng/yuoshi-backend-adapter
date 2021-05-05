@@ -12,6 +12,7 @@ export interface RequestAdapterConfiguration<RequestBackendConfigType> {
 		| URLSearchParams
 	auth?: boolean
 	config?: RequestBackendConfigType
+	responseType?: "blob" | undefined
 }
 
 export interface RequestType extends Omit<RequestAdapterConfiguration<never>, "auth"> {

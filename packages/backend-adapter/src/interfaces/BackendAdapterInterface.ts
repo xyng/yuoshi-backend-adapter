@@ -9,6 +9,7 @@ import { NSTaskContentAdapter } from "../adapters/AbstractTaskContentAdapter"
 import { NSTaskContentQuestAdapter } from "../adapters/AbstractTaskContentQuestAdapter"
 import { NSTaskContentQuestAnswerAdapter } from "../adapters/AbstractTaskContentQuestAnswerAdapter"
 import { NSUserTaskSolution } from "../adapters/AbstractUserTaskSolutionAdapter"
+import { NSFileAdapter } from "../adapters/AbstractFileAdapter"
 
 export interface BackendAdapterInterface<
 	RequestBackendConfigType,
@@ -35,4 +36,5 @@ export interface BackendAdapterInterface<
 		RequestBackendConfigType,
 		AuthenticationHandler
 	>
+	readonly fileAdapter: NSFileAdapter.AbstractFileAdapter<RequestBackendConfigType, AuthenticationHandler>
 }

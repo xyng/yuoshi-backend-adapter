@@ -51,6 +51,10 @@ export default class RequestAdapterAxios<AuthenticationHandler extends Authentic
 			}
 		}
 
+		if (config.responseType) {
+			axiosConfig.responseType = config.responseType
+		}
+
 		return {
 			...axiosConfig,
 			headers: {

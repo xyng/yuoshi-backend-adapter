@@ -33,7 +33,7 @@ export class Cloze extends AsyncBaseTask<StaticCloze, ClozeAnswerInput> {
 	protected init(contents: AsyncIterableWrapper<NSTaskContentAdapter.TaskContent>): void {
 		async function* from() {
 			for await (const content of contents) {
-				yield new ClozeContent(content.id, content.content)
+				yield new ClozeContent(content.id, content.content, content.file)
 			}
 		}
 
@@ -47,6 +47,7 @@ export class Cloze extends AsyncBaseTask<StaticCloze, ClozeAnswerInput> {
 				return {
 					id: content.id,
 					parts: content.getContentParts(),
+					file: content.file,
 				}
 			}).toArray()
 		});
@@ -72,7 +73,8 @@ type InputID = string & { readonly brand: unique symbol };
 class ClozeContent {
 	constructor(
 		public id: string,
-		protected content: string
+		protected content: string,
+		public file?: string
 	) {}
 
 	public getContentParts() {
@@ -80,7 +82,7 @@ class ClozeContent {
 			return {
 				id: match.id as InputID,
 				name: match.name,
-				content: match.content
+				content: match.content,
 			}
 		})
 	}

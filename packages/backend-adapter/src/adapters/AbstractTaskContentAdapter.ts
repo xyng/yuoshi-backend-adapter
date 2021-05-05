@@ -10,6 +10,7 @@ export namespace NSTaskContentAdapter {
 		intro?: string
 		outro?: string
 		content: string
+		file?: string
 		quests: AsyncIterableWrapper<NSTaskContentQuestAdapter.TaskContentQuest>
 	}
 
