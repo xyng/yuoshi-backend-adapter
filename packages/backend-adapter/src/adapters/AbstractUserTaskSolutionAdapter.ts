@@ -1,6 +1,7 @@
 import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerInterface"
 import { DefaultEntity, DefaultYuoshiAdapter } from "./DefaultYuoshiAdapter"
 import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper"
+import { AbstractPaginator } from "./AbstractPaginator"
 
 type ThenArg<T> = T extends PromiseLike<infer U> ? U : T
 
@@ -67,40 +68,87 @@ export namespace NSUserTaskSolution {
 		contents?: ContentSolution[]
 	}
 
-	export abstract class AbstractUserTaskSolutionAdapter<RequestConfigType, AuthenticationHandler extends AuthenticationHandlerInterface> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		public abstract getCurrentTaskPosition(task_id: string, solution_id?: string): Promise<{
+	export abstract class AbstractUserTaskSolutionAdapter<
+		RequestConfigType,
+		AuthenticationHandler extends AuthenticationHandlerInterface
+	> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
+		public abstract getCurrentTaskPosition(
+			task_id: string,
+			solution_id?: string
+		): Promise<{
 			id: string
 			current_content?: string
 			current_quest?: string
 		}>
 
-		public abstract saveCompleteTask(task_id: string, solution: UserTaskSolutionModel): Promise<{
-			content_solutions: ThenArg<ReturnType<AbstractUserTaskSolutionAdapter<RequestConfigType, AuthenticationHandler>['saveContentSolution']>>[]
-			quest_solutions: ThenArg<ReturnType<AbstractUserTaskSolutionAdapter<RequestConfigType, AuthenticationHandler>['saveQuestSolution']>>[]
-		} | undefined>
+		public abstract saveCompleteTask(
+			task_id: string,
+			solution: UserTaskSolutionModel
+		): Promise<
+			| {
+					content_solutions: ThenArg<
+						ReturnType<
+							AbstractUserTaskSolutionAdapter<
+								RequestConfigType,
+								AuthenticationHandler
+							>["saveContentSolution"]
+						>
+					>[]
+					quest_solutions: ThenArg<
+						ReturnType<
+							AbstractUserTaskSolutionAdapter<
+								RequestConfigType,
+								AuthenticationHandler
+							>["saveQuestSolution"]
+						>
+					>[]
+			  }
+			| undefined
+		>
 
-		public abstract saveContentSolution(content_id: string, value: object): Promise<{
-			id: string,
-			value: string
-		} | undefined>
+		public abstract saveContentSolution(
+			content_id: string,
+			value: object
+		): Promise<
+			| {
+					id: string
+					value: string
+			  }
+			| undefined
+		>
 
-		public abstract saveQuestSolution(quest_id: string, answers: QuestSolution[]): Promise<{
-			id: string,
-			is_correct: boolean
-			score: number
-			sent_solution: boolean
-		} | undefined>
+		public abstract saveQuestSolution(
+			quest_id: string,
+			answers: QuestSolution[]
+		): Promise<
+			| {
+					id: string
+					is_correct: boolean
+					score: number
+					sent_solution: boolean
+			  }
+			| undefined
+		>
 
-		public abstract getSampleSolution(quest_solution_id: string): Promise<{
-			quest_id: string
-			answers: {
-				id: string
-				sort: number | undefined
-				is_correct: boolean
-				content: string
-			}[]
-		} | undefined>
+		public abstract getSampleSolution(
+			quest_solution_id: string
+		): Promise<
+			| {
+					quest_id: string
+					answers: {
+						id: string
+						sort: number | undefined
+						is_correct: boolean
+						content: string
+					}[]
+			  }
+			| undefined
+		>
 
-		public abstract getCurrentSolution(task_id: string): Promise<UserTaskSolutionModel|undefined>
+		public abstract getCurrentSolution(task_id: string): Promise<UserTaskSolutionModel | undefined>
+
+		public abstract getAllUserSolutions(
+			user_id: string
+		): AbstractPaginator<NSUserTaskSolution.UserTaskSolution, any>
 	}
 }
