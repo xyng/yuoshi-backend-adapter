@@ -5,8 +5,6 @@ import { Drag, StaticDrag } from "./Drag"
 import { Cloze, StaticCloze } from "./Cloze"
 import { StaticTag, Tag } from "./Tag"
 import { Memory, StaticMemory } from "./Memory"
-import { Card, StaticCard } from "./Card"
-import { StaticTraining, Training } from "./Training"
 
 export enum TaskTypeName {
 	SURVEY = "survey",
@@ -15,8 +13,6 @@ export enum TaskTypeName {
 	CLOZE = "cloze",
 	TAG = "tag",
 	MEMORY = "memory",
-	CARD = "card",
-	TRAINING = "training",
 }
 
 type TaskTypeMap = {
@@ -26,8 +22,6 @@ type TaskTypeMap = {
 	[TaskTypeName.CLOZE]: Cloze
 	[TaskTypeName.TAG]: Tag
 	[TaskTypeName.MEMORY]: Memory
-	[TaskTypeName.CARD]: Card
-	[TaskTypeName.TRAINING]: Training
 }
 
 type StaticTaskTypeMap = {
@@ -37,8 +31,6 @@ type StaticTaskTypeMap = {
 	[TaskTypeName.CLOZE]: StaticCloze
 	[TaskTypeName.TAG]: StaticTag
 	[TaskTypeName.MEMORY]: StaticMemory
-	[TaskTypeName.CARD]: StaticCard
-	[TaskTypeName.TRAINING]: StaticTraining
 }
 
 type StaticTaskType<TKey extends keyof StaticTaskTypeMap> = StaticTaskTypeMap[TKey]
@@ -62,10 +54,6 @@ export default class TaskFactory {
 				return new Tag(task) as any
 			case TaskTypeName.MEMORY:
 				return new Memory(task) as any
-			case TaskTypeName.CARD:
-				return new Card(task) as any
-			case TaskTypeName.TRAINING:
-				return new Training(task) as any
 			default:
 				throw new Error("Unknown Task type given")
 		}
@@ -89,10 +77,6 @@ export default class TaskFactory {
 				return new StaticTag(task as any) as any
 			case TaskTypeName.MEMORY:
 				return new StaticMemory(task as any) as any
-			case TaskTypeName.CARD:
-				return new StaticCard(task as any) as any
-			case TaskTypeName.TRAINING:
-				return new StaticTraining(task as any) as any
 			default:
 				throw new Error("Unknown Task type given")
 		}
