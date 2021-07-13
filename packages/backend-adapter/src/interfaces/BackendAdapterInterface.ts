@@ -4,6 +4,7 @@ import { NSUserAdapter } from "../adapters/AbstractUserAdapter"
 import { NSCourseAdapter } from "../adapters/AbstractCourseAdapter"
 import { NSPackageAdapter } from "../adapters/AbstractPackageAdapter"
 import { NSStationsAdapter } from "../adapters/AbstractStationsAdapter"
+import { NSLearningObjectiveAdapter } from "../adapters/AbstractLearningObjectivesAdapter"
 import { NSTaskAdapter } from "../adapters/AbstractTaskAdapter"
 import { NSTaskContentAdapter } from "../adapters/AbstractTaskContentAdapter"
 import { NSTaskContentQuestAdapter } from "../adapters/AbstractTaskContentQuestAdapter"
@@ -32,6 +33,10 @@ export interface BackendAdapterInterface<
 		AuthenticationHandler
 	>
 	readonly userTaskSolutionAdapter: NSUserTaskSolution.AbstractUserTaskSolutionAdapter<
+		RequestBackendConfigType,
+		AuthenticationHandler
+	>
+	readonly learningObjectiveAdapter: NSLearningObjectiveAdapter.AbstractLearningObjectiveAdapter<
 		RequestBackendConfigType,
 		AuthenticationHandler
 	>
