@@ -3,7 +3,7 @@ import { StudipOauthAuthenticationHandler } from "../StudipOauthAuthenticationHa
 import AbstractUserTaskSolutionAdapter = NSUserTaskSolution.AbstractUserTaskSolutionAdapter
 import QuestSolution = NSUserTaskSolution.QuestSolution
 import UserTaskSolutionModel = NSUserTaskSolution.UserTaskSolutionModel
-
+import Paginator from "../Paginator"
 export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractUserTaskSolutionAdapter<
 	RequestBackendConfigType,
 	StudipOauthAuthenticationHandler
@@ -73,6 +73,21 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 		}
 	}
 
+	getAllUserSolutions(user_id: string): Paginator<NSUserTaskSolution.UserTaskSolution, any> {
+		return new Paginator<NSUserTaskSolution.UserTaskSolution, RequestBackendConfigType>(
+			config => {
+				return this.requestAdapter.getAuthorized(`/userTask_solutions/${user_id}`, config)
+			},
+			data => {
+				return {
+					id: data.id as string,
+					task_id: data.attributes.task_id,
+					contents: data.attributes,
+				}
+			}
+		)
+	}
+
 	async saveContentSolution(
 		content_id: string,
 		value: object
@@ -83,7 +98,6 @@ export class UserTaskSolutionAdapter<RequestBackendConfigType> extends AbstractU
 		  }
 		| undefined
 	> {
-		console.log("eevvverer?")
 		const { data } = await this.requestAdapter.postAuthorized(
 			`/content_solutions`,
 			{
