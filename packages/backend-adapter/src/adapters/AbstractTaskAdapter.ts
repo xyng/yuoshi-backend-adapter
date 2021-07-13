@@ -14,9 +14,7 @@ export namespace NSTaskAdapter {
 		DRAG = "drag",
 		CLOZE = "cloze",
 		TAG = "tag",
-		MEMORY = "memory",
-		CARD = "card",
-		TRAINING = "training",
+		MEMORY = "memory"
 	}
 
 	export type TaskTypeMap = ReturnType<AbstractTaskAdapter<any, any>["mapTaskToType"]>
