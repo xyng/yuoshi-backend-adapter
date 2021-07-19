@@ -1,6 +1,5 @@
 import { DefaultEntity, DefaultYuoshiAdapter } from "./DefaultYuoshiAdapter"
 import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerInterface"
-import { NSUserAdapter } from "./AbstractUserAdapter"
 import { AbstractPaginator } from "./AbstractPaginator"
 import AsyncIterableWrapper from "../helpers/AsyncIterableWrapper"
 import { NSTaskAdapter } from "./AbstractTaskAdapter"
@@ -16,6 +15,7 @@ export namespace NSStationsAdapter {
 		RequestConfigType,
 		AuthenticationHandler extends AuthenticationHandlerInterface
 	> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		abstract getStationsForPackage(station_id: string): AbstractPaginator<Station, any>
+		abstract getStationsForPackage(package_id: string): AbstractPaginator<Station, any>
+		abstract getStationsForLearningObjective(learningObjective_id: string): AbstractPaginator<Station, any>
 	}
 }
