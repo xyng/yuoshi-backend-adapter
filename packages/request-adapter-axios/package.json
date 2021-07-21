@@ -27,13 +27,13 @@
 		"@xyng/yuoshi-backend-adapter": "^0.0.2-beta.2"
 	},
 	"peerDependencies": {
-		"axios": "^0.19.1"
+		"axios": "^0.21.1"
 	},
 	"devDependencies": {
 		"@rollup/plugin-commonjs": "^11.0.1",
 		"@rollup/plugin-json": "^4.0.1",
 		"@rollup/plugin-node-resolve": "^7.0.0",
-		"axios": "^0.19.1",
+		"axios": "^0.21.1",
 		"rollup": "^1.29.0",
 		"rollup-plugin-typescript2": "^0.25.3",
 		"tslib": "^1.10.0",
