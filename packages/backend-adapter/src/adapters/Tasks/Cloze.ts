@@ -1,3 +1,5 @@
+import shuffle from "lodash/shuffle"
+
 import AsyncIterableWrapper from "../../helpers/AsyncIterableWrapper"
 import { NSTaskContentAdapter } from "../AbstractTaskContentAdapter"
 
@@ -47,6 +49,7 @@ export class Cloze extends AsyncBaseTask<StaticCloze, ClozeAnswerInput> {
 				return {
 					id: content.id,
 					parts: content.getContentParts(),
+					values: shuffle(content.getValues()),
 				}
 			}).toArray()
 		});
@@ -75,14 +78,40 @@ class ClozeContent {
 		protected content: string
 	) {}
 
+	public getValues() {
+		return parseContentMultiple(this.content, [matchInput]).map(match => {
+			return {
+				id: match.id as InputID,
+				name: match.name,
+				content: match.content
+			}
+		}).map(({ id }) => {
+			return id
+		})
+	}
+
+
 	public getContentParts() {
-		return parseContentMultiple(this.content, [matchImage, matchInput]).map(match => {
+		const rawParts = parseContentMultiple(this.content, [matchImage, matchInput]).map(match => {
 			return {
 				id: match.id as InputID,
 				name: match.name,
 				content: match.content
 			}
 		})
+
+		const parts = [];
+		let i = 0;
+		for (const part of rawParts) {
+			parts.push({
+				...rawParts,
+				id: i
+			})
+
+			i++;
+		}
+
+		return parts
 	}
 }
 
