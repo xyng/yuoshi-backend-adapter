@@ -17,6 +17,7 @@ export class StaticCloze extends StaticBaseTask<StaticClozeContent[]> {
 	readonly isTraining: boolean = false
 
 	public contents: StaticClozeContent[]
+	public values: InputID[]
 
 	protected init(contents: StaticClozeContent[]): void {
 		this.contents = contents
@@ -104,7 +105,7 @@ class ClozeContent {
 		let i = 0;
 		for (const part of rawParts) {
 			parts.push({
-				...rawParts,
+				...part,
 				id: i
 			})
 
