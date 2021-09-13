@@ -4,14 +4,14 @@ import Paginator from "../Paginator"
 
 export default class LearningObjectiveAdapter<
 	RequestBackendConfigType
-> extends NSLearningObjectiveAdapter.AbstractLearningObjectiveAdapter<
+	> extends NSLearningObjectiveAdapter.AbstractLearningObjectiveAdapter<
 	RequestBackendConfigType,
 	StudipOauthAuthenticationHandler
-> {
+	> {
 	getLearningObjectivesForPackage(package_id: string): Paginator<NSLearningObjectiveAdapter.LearningObjective, any> {
 		return new Paginator<NSLearningObjectiveAdapter.LearningObjective, RequestBackendConfigType>(
 			config => {
-				return this.requestAdapter.getAuthorized(`/learning_objectives/${package_id}`, config)
+				return this.requestAdapter.getAuthorized(`/learning_objectives_packages/${package_id}`, config)
 			},
 			data => {
 				return {
