@@ -5,7 +5,7 @@ export default class FilesAdapter<RequestBackendConfigType> extends NSFilesAdapt
 	RequestBackendConfigType,
 	StudipOauthAuthenticationHandler
 > {
-	async getFileById(file_id: string): Promise<File | undefined> {
+	async getFileById(file_id: string): Promise<NSFilesAdapter.StudipFile | undefined> {
 		const {
 			data: { data },
 		} = await this.requestAdapter.getAuthorized(`/files/${file_id}`)
@@ -13,6 +13,7 @@ export default class FilesAdapter<RequestBackendConfigType> extends NSFilesAdapt
 		if (!data) {
 			return undefined
 		}
+		console.log("EVER????!!!", data)
 
 		data => {
 			return {

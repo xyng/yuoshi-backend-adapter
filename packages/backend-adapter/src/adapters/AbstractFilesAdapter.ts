@@ -1,8 +1,9 @@
 import AuthenticationHandlerInterface from "../interfaces/AuthenticationHandlerInterface"
+import { AbstractPaginator } from "./AbstractPaginator"
 import { DefaultEntity, DefaultYuoshiAdapter } from "./DefaultYuoshiAdapter"
 
 export namespace NSFilesAdapter {
-	export interface File<T = any> extends DefaultEntity<T> {
+	export interface StudipFile<T = any> {
 		id: string
 		mime_type: string
 		name: string
@@ -13,6 +14,6 @@ export namespace NSFilesAdapter {
 		RequestConfigType,
 		AuthenticationHandler extends AuthenticationHandlerInterface
 	> extends DefaultYuoshiAdapter<RequestConfigType, AuthenticationHandler> {
-		abstract getFileById(file_id: string): Promise<File | any>
+		abstract getFileById(file_id: string): Promise<StudipFile | any>
 	}
 }
