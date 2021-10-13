@@ -5,9 +5,7 @@ import { DefaultEntity, DefaultYuoshiAdapter } from "./DefaultYuoshiAdapter"
 export namespace NSFilesAdapter {
 	export interface StudipFile<T = any> {
 		id: string
-		mime_type: string
 		name: string
-		user_id: string
 	}
 
 	export abstract class AbstractFilesAdapter<

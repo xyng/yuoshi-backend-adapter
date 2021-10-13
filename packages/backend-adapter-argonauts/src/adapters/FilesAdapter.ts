@@ -8,20 +8,15 @@ export default class FilesAdapter<RequestBackendConfigType> extends NSFilesAdapt
 	async getFileById(file_id: string): Promise<NSFilesAdapter.StudipFile | undefined> {
 		const {
 			data: { data },
-		} = await this.requestAdapter.getAuthorized(`/files/${file_id}`)
+		} = await this.requestAdapter.getAuthorized(`/files/${file_id}/file-refs`)
 
 		if (!data) {
 			return undefined
 		}
-		console.log("EVER????!!!", data)
 
-		data => {
-			return {
-				id: data.id as string,
-				mime_type: data.mime_type as string,
-				name: data.name as string,
-				user_id: data.user_id as string,
-			}
+		return {
+			id: data[0].id,
+			name: data[0].attributes.name,
 		}
 	}
 }
