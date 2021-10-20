@@ -18,6 +18,7 @@ import TaskContentQuestAdapter from "./adapters/TaskContentQuestAdapter"
 import TaskContentQuestAnswerAdapter from "./adapters/TaskContentQuestAnswerAdapter"
 import { UserTaskSolutionAdapter } from "./adapters/UserTaskSolutionAdapter"
 import LearningObjectiveAdapter from "./adapters/LearningObjectiveAdapter"
+import FilesAdapter from "./adapters/FilesAdapter"
 
 export default class BackendAdapter<RequestBackendConfigType>
 	implements BackendAdapterInterface<RequestBackendConfigType, StudipOauthAuthenticationHandler> {
@@ -26,7 +27,7 @@ export default class BackendAdapter<RequestBackendConfigType>
 	readonly packageAdapter: PackageAdapter<RequestBackendConfigType>
 	readonly stationAdapter: StationsAdapter<RequestBackendConfigType>
 	readonly learningObjectiveAdapter: LearningObjectiveAdapter<RequestBackendConfigType>
-
+	readonly filesAdapter: FilesAdapter<RequestBackendConfigType>
 	readonly taskAdapter: TaskAdapter<RequestBackendConfigType>
 	readonly taskContentAdapter: TaskContentAdapter<RequestBackendConfigType>
 	readonly taskContentQuestAdapter: TaskContentQuestAdapter<RequestBackendConfigType>
@@ -44,5 +45,6 @@ export default class BackendAdapter<RequestBackendConfigType>
 		this.taskContentQuestAdapter = new TaskContentQuestAdapter(requestAdapter, this)
 		this.taskContentQuestAnswerAdapter = new TaskContentQuestAnswerAdapter(requestAdapter, this)
 		this.userTaskSolutionAdapter = new UserTaskSolutionAdapter(requestAdapter, this)
+		this.filesAdapter = new FilesAdapter(requestAdapter, this)
 	}
 }

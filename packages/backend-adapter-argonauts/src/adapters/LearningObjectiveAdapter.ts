@@ -18,6 +18,7 @@ export default class LearningObjectiveAdapter<
 					id: data.id as string,
 					title: data.attributes.title,
 					description: data.attributes.description,
+					image: data.attributes.image as string,
 				}
 			}
 		)

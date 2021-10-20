@@ -28,6 +28,7 @@ export { NSTaskContentAdapter } from "./adapters/AbstractTaskContentAdapter"
 export { NSTaskContentQuestAdapter } from "./adapters/AbstractTaskContentQuestAdapter"
 export { NSTaskContentQuestAnswerAdapter } from "./adapters/AbstractTaskContentQuestAnswerAdapter"
 export { NSUserTaskSolution } from "./adapters/AbstractUserTaskSolutionAdapter"
+export { NSFilesAdapter } from "./adapters/AbstractFilesAdapter"
 
 // Helpers
 export { default as AsyncIterableWrapper } from "./helpers/AsyncIterableWrapper"

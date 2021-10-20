@@ -46,7 +46,7 @@ export default class TaskAdapter<RequestBackendConfigType> extends NSTaskAdapter
 		}
 
 		return {
-			id: data.id,
+			id: data.id as string,
 			type: data.attributes.kind,
 			title: data.attributes.title,
 			description: data.attributes.description,
